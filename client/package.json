@@ -1,7 +1,7 @@
 {
-  "name": "gogo-react",
+  "name": "decision-support-system",
   "version": "5.2.0",
-  "description": "Gogo - React Bootstrap 4 Admin Dashboard Template",
+  "description": "decision-support-system",
   "private": true,
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
