@@ -13,9 +13,23 @@ const modelSchema = new Schema(
       type: String,
     },
     coverUrl: {
-      type: Object,
+      type: String,
     },
-
+    learningConcept: {
+      type: String,
+    },
+    teacherExpertise: {
+      type: String,
+    },
+    equivalenceModule: {
+      type: String,
+    },
+    tag: {
+      type: String,
+    },
+    score: {
+      type: Number,
+    },
     deleteAt: { type: Date, default: null },
   },
   {
