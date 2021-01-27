@@ -7,6 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { isEmpty } from 'lodash';
 import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
@@ -29,6 +30,9 @@ const ViewError = React.lazy(() =>
 );
 const ViewUnauthorized = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './views/unauthorized')
+);
+const ViewLogin = React.lazy(() =>
+  import(/* webpackChunkName: "views-user" */ './views/user/login')
 );
 
 const Models = React.lazy(() =>
@@ -53,7 +57,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { locale } = this.props;
+    const { locale, isLogin, currentUser } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (
@@ -68,15 +72,20 @@ class App extends React.Component {
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>
+                  {/* <Redirect exact from="/" to={adminRoot} /> */}
                   <ProtectedRoute
                     path={adminRoot}
                     component={ViewApp}
-                    roles={[UserRole.Admin, UserRole.Editor]}
+                    isLogin={isLogin}
                   />
+
                   <Route
-                    path="/user"
-                    render={(props) => <ViewUser {...props} />}
+                    path="/login"
+                    render={(props) => (
+                      <ViewLogin {...props} isLogin={isLogin} />
+                    )}
                   />
+
                   <Route
                     path="/error"
                     exact
@@ -120,7 +129,9 @@ class App extends React.Component {
 const mapStateToProps = ({ authUser, settings }) => {
   const { currentUser } = authUser;
   const { locale } = settings;
-  return { currentUser, locale };
+  const isLogin = !isEmpty(currentUser);
+
+  return { currentUser, locale, isLogin };
 };
 const mapActionsToProps = {};
 

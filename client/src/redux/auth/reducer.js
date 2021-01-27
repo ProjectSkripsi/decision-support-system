@@ -16,14 +16,14 @@ import {
 import { getCurrentUser } from '../../helpers/Utils';
 import { isAuthGuardActive, currentUser } from '../../constants/defaultValues';
 
-
 const INIT_STATE = {
-  currentUser: isAuthGuardActive ? currentUser : getCurrentUser(),
+  currentUser: localStorage.auth ? JSON.parse(localStorage.auth) : {},
   forgotUserMail: '',
   newPassword: '',
   resetPasswordCode: '',
   loading: false,
   error: '',
+  isLogin: false,
 };
 
 export default (state = INIT_STATE, action) => {
@@ -31,13 +31,20 @@ export default (state = INIT_STATE, action) => {
     case LOGIN_USER:
       return { ...state, loading: true, error: '' };
     case LOGIN_USER_SUCCESS:
-      return { ...state, loading: false, currentUser: action.payload, error: '' };
+      return {
+        ...state,
+        loading: false,
+        currentUser: action.payload,
+        error: '',
+        isLogin: true,
+      };
     case LOGIN_USER_ERROR:
       return {
         ...state,
         loading: false,
         currentUser: null,
         error: action.payload.message,
+        isLogin: false,
       };
     case FORGOT_PASSWORD:
       return { ...state, loading: true, error: '' };
@@ -76,7 +83,12 @@ export default (state = INIT_STATE, action) => {
     case REGISTER_USER:
       return { ...state, loading: true, error: '' };
     case REGISTER_USER_SUCCESS:
-      return { ...state, loading: false, currentUser: action.payload, error: '' };
+      return {
+        ...state,
+        loading: false,
+        currentUser: action.payload,
+        error: '',
+      };
     case REGISTER_USER_ERROR:
       return {
         ...state,
@@ -85,7 +97,7 @@ export default (state = INIT_STATE, action) => {
         error: action.payload.message,
       };
     case LOGOUT_USER:
-      return { ...state, currentUser: null, error: '' };
+      return { ...state, currentUser: null, error: '', isLogin: false };
     default:
       return { ...state };
   }

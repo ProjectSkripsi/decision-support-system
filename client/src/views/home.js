@@ -317,14 +317,6 @@ const Home = () => {
                   href="/"
                   onClick={(event) => scrollTo(event, 'home')}
                 />
-
-                {/* <p
-                  className="text-white h1 mt-2 ml-1"
-                  style={{ marginLeft: '-200px', cursor: 'pointer' }}
-                  onClick={(event) => scrollTo(event, 'home')}
-                >
-                  BP-PAUD & DIKMAS Sulawesi Selatan
-                </p> */}
               </React.Fragment>
 
               <ul className="navbar-nav d-none d-lg-flex flex-row">
@@ -360,7 +352,7 @@ const Home = () => {
                   </span>
                 </li>
                 <li className="nav-item">
-                  <NavLink to="/user/login">LOGIN</NavLink>
+                  <NavLink to="/login">LOGIN</NavLink>
                 </li>
               </ul>
               <span

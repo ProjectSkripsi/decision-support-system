@@ -50,7 +50,9 @@ const TopNav = ({
   clickOnMobileMenuAction,
   logoutUserAction,
   changeLocaleAction,
+  currentUser,
 }) => {
+  console.log(currentUser);
   const [isInFullScreen, setIsInFullScreen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
 
@@ -248,9 +250,9 @@ const TopNav = ({
         <div className="user d-inline-block">
           <UncontrolledDropdown className="dropdown-menu-right">
             <DropdownToggle className="p-0" color="empty">
-              <span className="name mr-1">Sarah Kortney</span>
+              <span className="name mr-1">{currentUser.email}</span>
               <span>
-                <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
+                <img alt="Profile" src="/assets/img/profiles/l-9.jpg" />
               </span>
             </DropdownToggle>
             <DropdownMenu className="mt-3" right>

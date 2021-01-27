@@ -39,9 +39,10 @@ module.exports = {
   },
 
   login: (req, res) => {
-    const { userName, password } = req.body;
+    console.log(`masuk`);
+    const { email, password } = req.body;
     User.findOne({
-      userName,
+      email,
       deleteAt: null,
     })
       .then((result) => {
@@ -78,7 +79,7 @@ module.exports = {
       })
       .catch((err) => {
         res.status(404).json({
-          msg: `userName not register`,
+          msg: `email not register`,
         });
       });
   },

@@ -24,11 +24,15 @@ const modelSchema = new Schema(
     equivalenceModule: {
       type: String,
     },
-    tag: {
+    year: {
       type: String,
     },
     score: {
-      type: Number,
+      type: String,
+    },
+    isPublish: {
+      type: Boolean,
+      default: false,
     },
     deleteAt: { type: Date, default: null },
   },

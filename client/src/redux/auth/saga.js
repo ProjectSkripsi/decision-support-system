@@ -19,8 +19,9 @@ import {
   resetPasswordError,
 } from './actions';
 
-import { adminRoot, currentUser } from "../../constants/defaultValues"
+import { adminRoot, currentUser } from '../../constants/defaultValues';
 import { setCurrentUser } from '../../helpers/Utils';
+import { userLoginService } from './services';
 
 export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
@@ -36,9 +37,11 @@ function* loginWithEmailPassword({ payload }) {
   const { email, password } = payload.user;
   const { history } = payload;
   try {
-    const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
-    if (!loginUser.message) {
-      const item = { uid: loginUser.user.uid, ...currentUser };
+    const loginUser = yield call(userLoginService, { email, password });
+    console.log(loginUser);
+    if (loginUser.status === 200) {
+      const item = { uid: loginUser.data._id, ...loginUser.data };
+      console.log(`item==>>`, item);
       setCurrentUser(item);
       yield put(loginUserSuccess(item));
       history.push(adminRoot);
@@ -91,12 +94,14 @@ const logoutAsync = async (history) => {
     .signOut()
     .then((user) => user)
     .catch((error) => error);
-  history.push(adminRoot);
+  history.push('/');
 };
 
 function* logout({ payload }) {
+  console.log('masuk');
   const { history } = payload;
   setCurrentUser();
+
   yield call(logoutAsync, history);
 }
 

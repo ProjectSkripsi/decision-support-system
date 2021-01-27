@@ -6,10 +6,10 @@ import TopNav from '../containers/navs/Topnav';
 import Sidebar from '../containers/navs/Sidebar';
 import Footer from '../containers/navs/Footer';
 
-const AppLayout = ({ containerClassnames, children, history }) => {
+const AppLayout = ({ containerClassnames, children, history, currentUser }) => {
   return (
     <div id="app-container" className={containerClassnames}>
-      <TopNav history={history} />
+      <TopNav history={history} currentUser={currentUser} />
       <Sidebar />
       <main>
         <div className="container-fluid">{children}</div>
@@ -18,9 +18,10 @@ const AppLayout = ({ containerClassnames, children, history }) => {
     </div>
   );
 };
-const mapStateToProps = ({ menu }) => {
+const mapStateToProps = ({ menu, authUser }) => {
   const { containerClassnames } = menu;
-  return { containerClassnames };
+  const { currentUser } = authUser;
+  return { containerClassnames, currentUser };
 };
 const mapActionToProps = {};
 

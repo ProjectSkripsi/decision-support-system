@@ -5,8 +5,8 @@ import axios from 'axios';
 import { servicePath } from '../../../../constants/defaultValues';
 
 import ListPageHeading from '../../../../containers/pages/ListPageHeading';
-import AddNewModal from '../../../../containers/pages/AddNewModal';
-import ListPageListing from '../../../../containers/pages/ListPageListing';
+import AddNewModal from '../../../../components/Model/AddNewModal';
+import ListPageListing from '../../../../components/Model/ListPageListing';
 import useMousetrap from '../../../../hooks/use-mousetrap';
 
 const getIndex = (value, arr, prop) => {
@@ -28,14 +28,14 @@ const orderOptions = [
 const pageSizes = [4, 8, 12, 20];
 
 const categories = [
-  { label: 'Cakes', value: 'Cakes', key: 0 },
-  { label: 'Cupcakes', value: 'Cupcakes', key: 1 },
-  { label: 'Desserts', value: 'Desserts', key: 2 },
+  { label: 'Tidak Ada', value: 'Tidak Ada', key: 0 },
+  { label: 'Kurang', value: 'Kurang', key: 1 },
+  { label: 'Cukup', value: 'Cukup', key: 2 },
 ];
 
 const DataListPages = ({ match }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [displayMode, setDisplayMode] = useState('list');
+  const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPageSize, setSelectedPageSize] = useState(8);
   const [selectedOrderOption, setSelectedOrderOption] = useState({
@@ -51,6 +51,17 @@ const DataListPages = ({ match }) => {
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
 
+  const [state, setState] = useState({
+    title: '',
+    description: '',
+    equivalenceModule: '',
+    teacherExpertise: '',
+    score: '',
+    tags: [],
+    learningConcept: '',
+    year: '',
+  });
+
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedPageSize, selectedOrderOption]);
@@ -59,7 +70,13 @@ const DataListPages = ({ match }) => {
     async function fetchData() {
       axios
         .get(
-          `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${selectedOrderOption.column}&search=${search}`
+          // `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&search=${search}`
+          `http://localhost:4000/api/v1/model/${selectedPageSize}/${currentPage}?search=${search}`,
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGUwMmJiOGE0ZTI4ZDM5NGY4MzhjMyIsImVtYWlsIjoiYWRtaW5AZ29kLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxMTUzNDQzMH0.PiUcMSGxCF-oqp31zlew8nytZ-CV6Y1mImxzZ_cebg8`,
+            },
+          }
         )
         .then((res) => {
           console.log(res);
@@ -67,11 +84,12 @@ const DataListPages = ({ match }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          setItems(
-            data.data.map((x) => {
-              return { ...x, img: x.img.replace('img/', 'img/products/') };
-            })
-          );
+          // setItems(
+          //   data.data.map((x) => {
+          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
+          //   })
+          // );
+          setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
           setIsLoaded(true);
@@ -122,7 +140,7 @@ const DataListPages = ({ match }) => {
         setSelectedItems([]);
       }
     } else {
-      setSelectedItems(items.map((x) => x.id));
+      setSelectedItems(items.map((x) => x._id));
     }
     document.activeElement.blur();
     return false;
@@ -142,6 +160,10 @@ const DataListPages = ({ match }) => {
     return true;
   };
 
+  const submitModel = () => {
+    console.log(`submit haloo`, state);
+  };
+
   useMousetrap(['ctrl+a', 'command+a'], () => {
     handleChangeSelectAll(false);
   });
@@ -150,6 +172,11 @@ const DataListPages = ({ match }) => {
     setSelectedItems([]);
     return false;
   });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setState((prevState) => ({ ...prevState, [name]: value }));
+  };
 
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
@@ -186,11 +213,45 @@ const DataListPages = ({ match }) => {
           orderOptions={orderOptions}
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
+          isAdmin
         />
         <AddNewModal
           modalOpen={modalOpen}
           toggleModal={() => setModalOpen(!modalOpen)}
           categories={categories}
+          submitModel={submitModel}
+          data={state}
+          onChange={onChange}
+          setEquivalenceModule={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              equivalenceModule: e.value,
+            }));
+          }}
+          setTeacherExpertise={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              teacherExpertise: e.value,
+            }));
+          }}
+          setTag={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              tags: e,
+            }));
+          }}
+          setScore={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              score: e.toString(),
+            }));
+          }}
+          setConcept={(value) => {
+            setState((prevState) => ({
+              ...prevState,
+              learningConcept: value,
+            }));
+          }}
         />
         <ListPageListing
           items={items}

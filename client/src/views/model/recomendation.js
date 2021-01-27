@@ -18,7 +18,7 @@ import { servicePath } from '../../constants/defaultValues';
 
 import ListPageHeading from '../../containers/pages/ListPageHeading';
 import AddNewModal from '../../containers/pages/AddNewModal';
-import ListPageListing from '../../containers/pages/ListPageListing';
+import ListPageListing from '../../components/Model/ListPageListing';
 import useMousetrap from '../../hooks/use-mousetrap';
 
 const getIndex = (value, arr, prop) => {
@@ -55,7 +55,7 @@ const Home = ({ match }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPageSize, setSelectedPageSize] = useState(12);
+  const [selectedPageSize, setSelectedPageSize] = useState(8);
   const [selectedOrderOption, setSelectedOrderOption] = useState({
     column: 'title',
     label: 'Product Name',
@@ -136,7 +136,7 @@ const Home = ({ match }) => {
     async function fetchData() {
       axios
         .get(
-          `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${selectedOrderOption.column}&search=${search}`
+          `http://localhost:4000/api/v1/model/public/${selectedPageSize}/${currentPage}?search=${search}`
         )
         .then((res) => {
           console.log(res);
@@ -144,11 +144,12 @@ const Home = ({ match }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          setItems(
-            data.data.map((x) => {
-              return { ...x, img: x.img.replace('img/', 'img/products/') };
-            })
-          );
+          // setItems(
+          //   data.data.map((x) => {
+          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
+          //   })
+          // );
+          setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
           setIsLoaded(true);
@@ -274,7 +275,7 @@ const Home = ({ match }) => {
             </span>
           </li>
           <li className="nav-item">
-            <NavLink to="/user/login">LOGIN</NavLink>
+            <NavLink to="/login">LOGIN</NavLink>
           </li>
         </ul>
       </div>
@@ -321,7 +322,7 @@ const Home = ({ match }) => {
                   </span>
                 </li>
                 <li className="nav-item">
-                  <NavLink to="/user/login">LOGIN</NavLink>
+                  <NavLink to="/login">LOGIN</NavLink>
                 </li>
               </ul>
               <span

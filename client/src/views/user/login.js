@@ -10,7 +10,7 @@ import {
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import UserLayout from '../../layout/UserLayout';
 import { Formik, Form, Field } from 'formik';
 import { NotificationManager } from '../../components/common/react-notifications';
 
@@ -38,7 +38,7 @@ const validateEmail = (value) => {
   return error;
 };
 
-const Login = ({ history, loading, error, loginUserAction }) => {
+const Login = ({ history, loading, error, loginUserAction, isLogin }) => {
   // const [email] = useState('demo@gogo.com');
   // const [password] = useState('gogo123');
   const [email] = useState('');
@@ -50,9 +50,16 @@ const Login = ({ history, loading, error, loginUserAction }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (isLogin) {
+      history.push('/app');
+    }
+  }, []);
+
   const onUserLogin = (values) => {
     if (!loading) {
       if (values.email !== '' && values.password !== '') {
+        // console.log(values, history);
         loginUserAction(values, history);
       }
     }
@@ -61,107 +68,109 @@ const Login = ({ history, loading, error, loginUserAction }) => {
   const initialValues = { email, password };
 
   return (
-    <Row className="h-100">
-      <Colxx xxs="12" md="10" className="mx-auto my-auto">
-        <Card className="auth-card">
-          <div className="position-relative image-side ">
-            <p className="text-white h2">BP-PAUD & DIKMAS Sulawesi Selatan</p>
-            <p className="white mb-0">
-              Silahkan gunakan email & password untuk login.
-              <br />
-              {/* Jika belum mempunyai akun
+    <UserLayout>
+      <Row className="h-100">
+        <Colxx xxs="12" md="10" className="mx-auto my-auto">
+          <Card className="auth-card">
+            <div className="position-relative image-side ">
+              <p className="text-white h2">BP-PAUD & DIKMAS Sulawesi Selatan</p>
+              <p className="white mb-0">
+                Silahkan gunakan email & password untuk login.
+                <br />
+                {/* Jika belum mempunyai akun
               <NavLink to="/user/register" className="white">
                 register
               </NavLink>
               . */}
-            </p>
-          </div>
-          <div className="form-side">
-            <Row>
-              <Col xs="2">
-                <NavLink to="/" className="white">
-                  {/* <span className="logo-single" /> */}
-                  <img
-                    src="/assets/logos/white-full.png"
-                    alt="Logo"
-                    href="/"
-                    height="80"
-                    style={{ marginLeft: '-30px', marginBottom: '20px' }}
-                  />
-                </NavLink>
-              </Col>
-              <Col xs="10">
-                <p className="text-black h5 ml-3 mt-4">
-                  BP-PAUD & DIKMAS Sulawesi Selatan
-                </p>
-              </Col>
-            </Row>
+              </p>
+            </div>
+            <div className="form-side">
+              <Row>
+                <Col xs="2">
+                  <NavLink to="/" className="white">
+                    {/* <span className="logo-single" /> */}
+                    <img
+                      src="/assets/logos/white-full.png"
+                      alt="Logo"
+                      href="/"
+                      height="80"
+                      style={{ marginLeft: '-30px', marginBottom: '20px' }}
+                    />
+                  </NavLink>
+                </Col>
+                <Col xs="10">
+                  <p className="text-black h5 ml-3 mt-4">
+                    BP-PAUD & DIKMAS Sulawesi Selatan
+                  </p>
+                </Col>
+              </Row>
 
-            <CardTitle className="mb-4">
-              <IntlMessages id="user.login-title" />
-            </CardTitle>
-            <Formik initialValues={initialValues} onSubmit={onUserLogin}>
-              {({ errors, touched }) => (
-                <Form className="av-tooltip tooltip-label-bottom">
-                  <FormGroup className="form-group has-float-label">
-                    <Label>
-                      <IntlMessages id="user.email" />
-                    </Label>
-                    <Field
-                      className="form-control"
-                      name="email"
-                      validate={validateEmail}
-                    />
-                    {errors.email && touched.email && (
-                      <div className="invalid-feedback d-block">
-                        {errors.email}
-                      </div>
-                    )}
-                  </FormGroup>
-                  <FormGroup className="form-group has-float-label">
-                    <Label>
-                      <IntlMessages id="user.password" />
-                    </Label>
-                    <Field
-                      className="form-control"
-                      type="password"
-                      name="password"
-                      validate={validatePassword}
-                    />
-                    {errors.password && touched.password && (
-                      <div className="invalid-feedback d-block">
-                        {errors.password}
-                      </div>
-                    )}
-                  </FormGroup>
-                  <div className="d-flex justify-content-between align-items-center">
-                    {/* <NavLink to="/user/forgot-password">
+              <CardTitle className="mb-4">
+                <IntlMessages id="user.login-title" />
+              </CardTitle>
+              <Formik initialValues={initialValues} onSubmit={onUserLogin}>
+                {({ errors, touched }) => (
+                  <Form className="av-tooltip tooltip-label-bottom">
+                    <FormGroup className="form-group has-float-label">
+                      <Label>
+                        <IntlMessages id="user.email" />
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="email"
+                        validate={validateEmail}
+                      />
+                      {errors.email && touched.email && (
+                        <div className="invalid-feedback d-block">
+                          {errors.email}
+                        </div>
+                      )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                      <Label>
+                        <IntlMessages id="user.password" />
+                      </Label>
+                      <Field
+                        className="form-control"
+                        type="password"
+                        name="password"
+                        validate={validatePassword}
+                      />
+                      {errors.password && touched.password && (
+                        <div className="invalid-feedback d-block">
+                          {errors.password}
+                        </div>
+                      )}
+                    </FormGroup>
+                    <div className="d-flex justify-content-between align-items-center">
+                      {/* <NavLink to="/user/forgot-password">
                       <IntlMessages id="user.forgot-password-question" />
                     </NavLink> */}
-                    <Button
-                      color="primary"
-                      className={`btn-shadow btn-multiple-state ${
-                        loading ? 'show-spinner' : ''
-                      }`}
-                      size="lg"
-                    >
-                      <span className="spinner d-inline-block">
-                        <span className="bounce1" />
-                        <span className="bounce2" />
-                        <span className="bounce3" />
-                      </span>
-                      <span className="label">
-                        <IntlMessages id="user.login-button" />
-                      </span>
-                    </Button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </Card>
-      </Colxx>
-    </Row>
+                      <Button
+                        color="primary"
+                        className={`btn-shadow btn-multiple-state ${
+                          loading ? 'show-spinner' : ''
+                        }`}
+                        size="lg"
+                      >
+                        <span className="spinner d-inline-block">
+                          <span className="bounce1" />
+                          <span className="bounce2" />
+                          <span className="bounce3" />
+                        </span>
+                        <span className="label">
+                          <IntlMessages id="user.login-button" />
+                        </span>
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          </Card>
+        </Colxx>
+      </Row>
+    </UserLayout>
   );
 };
 const mapStateToProps = ({ authUser }) => {

@@ -1,23 +1,33 @@
-import React from 'react';
-import { Row } from 'reactstrap';
+import React, { useRef } from 'react';
+import { Row, CardTitle, CardBody, Card, Button, Form } from 'reactstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import Breadcrumb from '../../containers/navs/Breadcrumb';
+import DropzoneExample from '../../containers/forms/DropzoneExample';
 
 const BlankPage = ({ match }) => {
+  const dropzone = useRef();
   return (
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="menu.blank-page" match={match} />
+          <h1 style={{ color: 'black' }}>Update Kurikulum</h1>
           <Separator className="mb-5" />
         </Colxx>
       </Row>
       <Row>
         <Colxx xxs="12" className="mb-4">
-          <p>
-            <IntlMessages id="menu.blank-page" />
-          </p>
+          <Card>
+            <CardBody>
+              <Form>
+                <CardTitle>File Kurikulum</CardTitle>
+                <DropzoneExample ref={dropzone} />
+                <Button color="primary" className="mt-4">
+                  <IntlMessages id="forms.submit" />
+                </Button>
+              </Form>
+            </CardBody>
+          </Card>
         </Colxx>
       </Row>
     </>
