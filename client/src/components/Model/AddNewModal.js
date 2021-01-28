@@ -1,16 +1,14 @@
 import React, { useRef } from 'react';
+import { Button, Modal, ModalHeader, ModalBody, Label } from 'reactstrap';
 import {
-  CustomInput,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
-  Label,
-} from 'reactstrap';
-import Select from 'react-select';
-import CustomSelectInput from '../../components/common/CustomSelectInput';
+  AvForm,
+  AvField,
+  AvGroup,
+  AvInput,
+  AvFeedback,
+  AvRadioGroup,
+  AvRadio,
+} from 'availity-reactstrap-validation';
 import IntlMessages from '../../helpers/IntlMessages';
 import DropzoneExample from '../../containers/forms/DropzoneExample';
 import { SliderTooltip } from '../../components/common/SliderTooltips';
@@ -18,15 +16,12 @@ import { SliderTooltip } from '../../components/common/SliderTooltips';
 const AddNewModal = ({
   modalOpen,
   toggleModal,
-  categories,
-  submitModel,
   data,
   onChange,
-  setEquivalenceModule,
-  setTeacherExpertise,
-  setTag,
+  onSubmit,
   setScore,
-  setConcept,
+  onUploadImg,
+  onUploadFile,
 }) => {
   const dropzone = useRef();
 
@@ -39,81 +34,122 @@ const AddNewModal = ({
     >
       <ModalHeader toggle={toggleModal}>Tambah Model Pembelajaran</ModalHeader>
       <ModalBody>
-        <Label>Judul</Label>
-        <Input value={data.title} name="title" onChange={onChange} />
-        <Label className="mt-4">Kesetaraan Modul</Label>
-        <Select
-          components={{ Input: CustomSelectInput }}
-          className="react-select"
-          classNamePrefix="react-select"
-          name="form-field-name"
-          options={categories}
-          onChange={setEquivalenceModule}
-        />
-        <Label className="mt-4">Keahlian Guru</Label>
-        <Select
-          components={{ Input: CustomSelectInput }}
-          className="react-select"
-          classNamePrefix="react-select"
-          name="form-field-name"
-          options={categories}
-          onChange={setTeacherExpertise}
-        />
-        <Label className="mt-4">Tahun</Label>
-        <Input value={data.year} name="year" onChange={onChange} />
-        <Label className="mt-4">Deskripsi</Label>
-        <Input
-          type="textarea"
-          name="description"
-          onChange={onChange}
-          id="exampleText"
-          value={data.description}
-        />
-        <Label className="mt-4">Score</Label>
-        <SliderTooltip
-          min={0}
-          max={100}
-          defaultValue={0}
-          className="mb-5"
-          step={1}
-          onChange={setScore}
-        />
-        <Label className="mt-4">Konsep Pembelajaran</Label>
-        <CustomInput
-          type="radio"
-          id="exCustomRadio"
-          name="customRadio"
-          label="Kontekstual"
-          value="Kontekstual"
-          onChange={(e) => {
-            const { value } = e.target;
-            setConcept(value);
-          }}
-        />
-        <CustomInput
-          type="radio"
-          id="exCustomRadio2"
-          name="customRadio"
-          label="Tekstual"
-          value="Tekstual"
-          onChange={(e) => {
-            const { value } = e.target;
-            setConcept(value);
-          }}
-        />
-        <Label className="mt-4">File</Label>
-        <DropzoneExample ref={dropzone} />
-        <Label className="mt-4">Cover</Label>
-        <DropzoneExample ref={dropzone} />
+        <AvForm
+          className="av-tooltip tooltip-label-right"
+          onSubmit={(event, errors, values) => onSubmit(event, errors, values)}
+        >
+          <AvGroup>
+            <Label>Judul</Label>
+            <AvInput
+              required
+              value={data.title}
+              name="title"
+              onChange={onChange}
+            />
+
+            <AvFeedback>Judul wajib di isi!</AvFeedback>
+          </AvGroup>
+          <AvGroup>
+            <Label>Tahun</Label>
+            <AvInput
+              required
+              value={data.year}
+              name="year"
+              type="number"
+              onChange={onChange}
+            />
+            <AvFeedback>Tahun wajib di isi!</AvFeedback>
+          </AvGroup>
+
+          <AvGroup>
+            <AvField
+              type="select"
+              name="equivalenceModule"
+              required
+              label="Kesetaraan Modul"
+              errorMessage="Please select an option!"
+              onChange={onChange}
+            >
+              <option value="" />
+              <option>Tidak Ada</option>
+              <option>Kurang</option>
+              <option>Cukup</option>
+            </AvField>
+          </AvGroup>
+
+          <AvGroup>
+            <AvField
+              type="select"
+              name="teacherExpertise"
+              required
+              label="Keahlian Guru"
+              errorMessage="Please select an option!"
+              onChange={onChange}
+            >
+              <option value="" />
+              <option>Tidak Ada</option>
+              <option>Kurang</option>
+              <option>Cukup</option>
+            </AvField>
+          </AvGroup>
+          <AvGroup>
+            <Label>Deskripsi</Label>
+            <AvInput
+              type="textarea"
+              name="description"
+              id="description"
+              required
+              onChange={onChange}
+            />
+            <AvFeedback>Please enter some description!</AvFeedback>
+          </AvGroup>
+          <Label className="mt-3">Score</Label>
+          <SliderTooltip
+            min={0}
+            max={100}
+            defaultValue={0}
+            className="mb-5"
+            step={1}
+            onChange={setScore}
+          />
+
+          <AvRadioGroup
+            className="error-l-150 "
+            name="learningConcept"
+            required
+          >
+            <Label className="d-block mt-4">Konsep Pembelajaran</Label>
+            <AvRadio
+              customInput
+              onChange={onChange}
+              label="Kontekstual"
+              value="Kontekstual"
+            />
+            <AvRadio
+              customInput
+              onChange={onChange}
+              label="Tekstual"
+              value="Tekstual"
+            />
+          </AvRadioGroup>
+          <Label className="mt-4">Cover Model</Label>
+          <DropzoneExample ref={dropzone} onUpload={onUploadImg} />
+          <Label className="mt-3">File Model</Label>
+          <DropzoneExample ref={dropzone} onUpload={onUploadFile} />
+
+          <Button color="primary" className="mt-5 mr-5 ml-4">
+            Submit
+          </Button>
+          <Button
+            color="secondary"
+            outline
+            className="mt-5 ml-5"
+            onClick={toggleModal}
+          >
+            <IntlMessages id="pages.cancel" />
+          </Button>
+        </AvForm>
       </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" outline onClick={toggleModal}>
-          <IntlMessages id="pages.cancel" />
-        </Button>
-        <Button color="primary" onClick={submitModel}>
-          <IntlMessages id="pages.submit" />
-        </Button>{' '}
-      </ModalFooter>
     </Modal>
   );
 };

@@ -98,7 +98,6 @@ const logoutAsync = async (history) => {
 };
 
 function* logout({ payload }) {
-  console.log('masuk');
   const { history } = payload;
   setCurrentUser();
 

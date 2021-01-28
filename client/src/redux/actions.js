@@ -72,10 +72,14 @@ export const SURVEY_GET_DETAILS_ERROR = 'SURVEY_GET_DETAILS_ERROR';
 export const SURVEY_DELETE_QUESTION = 'SURVEY_DELETE_QUESTION';
 export const SURVEY_SAVE = 'SURVEY_SAVE';
 
+export const SUBMIT_NEW_MODEL_REQUEST = 'SUBMIT_NEW_MODEL_REQUEST';
+export const SUBMIT_NEW_MODEL_SUCCESS = 'SUBMIT_NEW_MODEL_SUCCESS';
+export const SUBMIT_NEW_MODEL_ERROR = 'SUBMIT_NEW_MODEL_ERROR';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';
 export * from './todo/actions';
-export * from './chat/actions';
 export * from './surveyList/actions';
 export * from './surveyDetail/actions';
+export * from './model/actions';

@@ -10,9 +10,6 @@ const Survey = React.lazy(() =>
 const SurveyDetail = React.lazy(() =>
   import(/* webpackChunkName: "application-survey-detail" */ './survey-detail')
 );
-const Chat = React.lazy(() =>
-  import(/* webpackChunkName: "application-chat" */ './chat')
-);
 
 const Applications = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -32,10 +29,7 @@ const Applications = ({ match }) => (
         render={(props) => <Survey {...props} />}
         isExact
       />
-      <Route
-        path={`${match.url}/chat`}
-        render={(props) => <Chat {...props} />}
-      />
+
       <Redirect to="/error" />
     </Switch>
   </Suspense>

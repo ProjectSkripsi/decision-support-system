@@ -12,7 +12,7 @@ module.exports = {
       equivalenceModule,
       year,
       score,
-    } = req.body;
+    } = req.body.data;
     try {
       const response = await Model.create({
         title,

@@ -172,3 +172,17 @@ export const setCurrentUser = (user) => {
     console.log('>>>>: src/helpers/Utils.js : setCurrentUser -> error', error);
   }
 };
+
+export const getToken = () => {
+  let user = null;
+  try {
+    user =
+      localStorage.getItem('auth') != null
+        ? JSON.parse(localStorage.getItem('auth')).token
+        : null;
+  } catch (error) {
+    console.log('>>>>: src/helpers/Utils.js  : getCurrentUser -> error', error);
+    user = null;
+  }
+  return user;
+};

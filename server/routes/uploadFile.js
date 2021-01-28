@@ -54,8 +54,7 @@ router.post(
 
 router.post(
   "/image",
-  isLogin,
-  isAdmin,
+
   uploadImages.single("file"),
   function (req, res) {
     const { host } = req.headers;

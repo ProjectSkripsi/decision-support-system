@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import { connect } from 'react-redux';
 import axios from 'axios';
-
-import { servicePath } from '../../../../constants/defaultValues';
-
 import ListPageHeading from '../../../../containers/pages/ListPageHeading';
 import AddNewModal from '../../../../components/Model/AddNewModal';
 import ListPageListing from '../../../../components/Model/ListPageListing';
 import useMousetrap from '../../../../hooks/use-mousetrap';
+import { sumbitModel } from '../../../../redux/actions';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -18,8 +16,6 @@ const getIndex = (value, arr, prop) => {
   return -1;
 };
 
-const apiUrl = `${servicePath}/cakes/paging`;
-
 const orderOptions = [
   { column: 'title', label: 'Product Name' },
   { column: 'category', label: 'Category' },
@@ -27,13 +23,7 @@ const orderOptions = [
 ];
 const pageSizes = [4, 8, 12, 20];
 
-const categories = [
-  { label: 'Tidak Ada', value: 'Tidak Ada', key: 0 },
-  { label: 'Kurang', value: 'Kurang', key: 1 },
-  { label: 'Cukup', value: 'Cukup', key: 2 },
-];
-
-const DataListPages = ({ match }) => {
+const DataListPages = ({ match, submitModelAction }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,9 +47,10 @@ const DataListPages = ({ match }) => {
     equivalenceModule: '',
     teacherExpertise: '',
     score: '',
-    tags: [],
     learningConcept: '',
     year: '',
+    coverUrl: '',
+    fileUrl: '',
   });
 
   useEffect(() => {
@@ -79,16 +70,11 @@ const DataListPages = ({ match }) => {
           }
         )
         .then((res) => {
-          console.log(res);
           return res.data;
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          // setItems(
-          //   data.data.map((x) => {
-          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
-          //   })
-          // );
+
           setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
@@ -160,8 +146,12 @@ const DataListPages = ({ match }) => {
     return true;
   };
 
-  const submitModel = () => {
-    console.log(`submit haloo`, state);
+  const onSubmit = (event, errors, values) => {
+    console.log(errors);
+    console.log(state);
+    if (errors.length === 0) {
+      submitModelAction(state);
+    }
   };
 
   useMousetrap(['ctrl+a', 'command+a'], () => {
@@ -176,6 +166,16 @@ const DataListPages = ({ match }) => {
   const onChange = (e) => {
     const { name, value } = e.target;
     setState((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const onUploadImg = (file) => {
+    const img = JSON.parse(file.xhr.response);
+    setState((prevState) => ({ ...prevState, coverUrl: img.fileUrl }));
+  };
+
+  const onUploadFile = (file) => {
+    const img = JSON.parse(file.xhr.response);
+    setState((prevState) => ({ ...prevState, fileUrl: img.fileUrl }));
   };
 
   const startIndex = (currentPage - 1) * selectedPageSize;
@@ -218,40 +218,17 @@ const DataListPages = ({ match }) => {
         <AddNewModal
           modalOpen={modalOpen}
           toggleModal={() => setModalOpen(!modalOpen)}
-          categories={categories}
-          submitModel={submitModel}
+          onSubmit={onSubmit}
           data={state}
           onChange={onChange}
-          setEquivalenceModule={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              equivalenceModule: e.value,
-            }));
-          }}
-          setTeacherExpertise={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              teacherExpertise: e.value,
-            }));
-          }}
-          setTag={(e) => {
-            setState((prevState) => ({
-              ...prevState,
-              tags: e,
-            }));
-          }}
           setScore={(e) => {
             setState((prevState) => ({
               ...prevState,
               score: e.toString(),
             }));
           }}
-          setConcept={(value) => {
-            setState((prevState) => ({
-              ...prevState,
-              learningConcept: value,
-            }));
-          }}
+          onUploadImg={onUploadImg}
+          onUploadFile={onUploadFile}
         />
         <ListPageListing
           items={items}
@@ -269,4 +246,4 @@ const DataListPages = ({ match }) => {
   );
 };
 
-export default DataListPages;
+export default connect(null, { submitModelAction: sumbitModel })(DataListPages);

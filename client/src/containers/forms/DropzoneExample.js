@@ -6,11 +6,12 @@ import 'dropzone/dist/min/dropzone.min.css';
 const ReactDOMServer = require('react-dom/server');
 
 const dropzoneComponentConfig = {
-  postUrl: 'https://httpbin.org/post',
+  postUrl: 'http://localhost:4000/api/v1/upload/image',
 };
+
 const dropzoneConfig = {
   thumbnailHeight: 160,
-  maxFilesize: 2,
+  maxFilesize: 1,
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">
@@ -60,15 +61,20 @@ export default class DropzoneExample extends Component {
   }
 
   render() {
+    const { onUpload } = this.props;
+
+    const eventHandlers = {
+      init: (dz) => (this.dropzone = dz),
+      drop: this.callbackArray,
+      addedfile: this.callback,
+      success: onUpload,
+      removedfile: this.removedfile,
+    };
     return (
       <DropzoneComponent
         config={dropzoneComponentConfig}
         djsConfig={dropzoneConfig}
-        eventHandlers={{
-          init: (dropzone) => {
-            this.myDropzone = dropzone;
-          },
-        }}
+        eventHandlers={eventHandlers}
       />
     );
   }

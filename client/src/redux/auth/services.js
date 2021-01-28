@@ -2,12 +2,10 @@ import axios from 'axios';
 import { baseUrl } from '../../constants/defaultValues';
 
 export const userLoginService = async (userData) => {
-  console.log(userData);
   try {
     const response = await axios.post(`${baseUrl}/user/login`, userData);
     return response;
   } catch ({ response }) {
-    // console.error(response);
     return response;
   }
 };
