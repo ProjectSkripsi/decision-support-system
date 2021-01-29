@@ -3,7 +3,6 @@
   "version": "5.2.0",
   "description": "decision-support-system",
   "private": true,
-  "homepage": "https://arul21.github.io/bp-paud",
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
     "availity-reactstrap-validation": "^2.6.1",
