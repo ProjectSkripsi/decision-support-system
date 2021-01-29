@@ -13,8 +13,6 @@ import {
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
 } from '../actions';
-import { getCurrentUser } from '../../helpers/Utils';
-import { isAuthGuardActive, currentUser } from '../../constants/defaultValues';
 
 const INIT_STATE = {
   currentUser: localStorage.auth ? JSON.parse(localStorage.auth) : {},

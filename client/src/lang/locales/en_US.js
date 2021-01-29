@@ -148,6 +148,8 @@ module.exports = {
   'menu.validations': 'Validations',
   'menu.wizard': 'Wizard',
   'menu.download': 'Download',
+  'menu.master-paud': 'Master Paud',
+  'menu.master-user': 'Master User',
 
   /* 04.Dashboards */
   'dashboards.pending-orders': 'Pending Orders',

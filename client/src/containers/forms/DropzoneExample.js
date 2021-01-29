@@ -11,7 +11,7 @@ const dropzoneComponentConfig = {
 
 const dropzoneConfig = {
   thumbnailHeight: 160,
-  maxFilesize: 1,
+  maxFiles: 1,
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">

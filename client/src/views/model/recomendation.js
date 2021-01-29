@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { adminRoot } from '../../constants/defaultValues';
 import { NavLink } from 'react-router-dom';
 import {
   DropdownToggle,
@@ -13,9 +12,7 @@ import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
 
 import axios from 'axios';
-
-import { servicePath } from '../../constants/defaultValues';
-
+import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
 import AddNewModal from '../../containers/pages/AddNewModal';
 import ListPageListing from '../../components/Model/ListPageListing';
@@ -29,8 +26,6 @@ const getIndex = (value, arr, prop) => {
   }
   return -1;
 };
-
-const apiUrl = `${servicePath}/cakes/paging`;
 
 const orderOptions = [
   { column: 'title', label: 'Product Name' },
@@ -50,8 +45,7 @@ const Home = ({ match }) => {
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
   const refSectionFooter = useRef(null);
-  // const [activeTab, setActiveTab] = useState(0);
-  // const [isOpenSizingLg, setIsOpenSizingLg] = useState(false);
+  const [data, setData] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +67,7 @@ const Home = ({ match }) => {
     window.addEventListener('scroll', onWindowScroll);
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', onWindowClick);
-
+    fetch();
     document.body.classList.add('no-footer');
     return () => {
       window.removeEventListener('scroll', onWindowScroll);
@@ -82,6 +76,11 @@ const Home = ({ match }) => {
       document.body.classList.remove('no-footer');
     };
   }, []);
+
+  const fetch = async () => {
+    const data = await getCurriculumService();
+    setData(data.data[0]);
+  };
 
   const onWindowResize = (event) => {
     const homeRect = refRowHome.current.getBoundingClientRect();
@@ -117,15 +116,8 @@ const Home = ({ match }) => {
     return false;
   };
 
-  // const toggle = (tab) => {
-  //   if (activeTab !== tab) setActiveTab(tab);
-  // };
-
   const onDownload = () => {
-    const blob = new Blob(['Hello, world!'], {
-      type: 'text/plain;charset=utf-8',
-    });
-    saveAs(blob, 'hello world.txt');
+    saveAs(data.fileUrl, `${data.title}.pdf`);
   };
 
   useEffect(() => {
@@ -139,16 +131,10 @@ const Home = ({ match }) => {
           `http://localhost:4000/api/v1/model/public/${selectedPageSize}/${currentPage}?search=${search}`
         )
         .then((res) => {
-          console.log(res);
           return res.data;
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          // setItems(
-          //   data.data.map((x) => {
-          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
-          //   })
-          // );
           setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);

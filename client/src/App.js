@@ -14,7 +14,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import { NotificationContainer } from './components/common/react-notifications';
 import { isMultiColorActive, adminRoot } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { ProtectedRoute, UserRole } from './helpers/authHelper';
+import { ProtectedRoute } from './helpers/authHelper';
 
 const ViewHome = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './views/home')
@@ -22,9 +22,7 @@ const ViewHome = React.lazy(() =>
 const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './views/app')
 );
-const ViewUser = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './views/user')
-);
+
 const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './views/error')
 );
@@ -57,7 +55,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { locale, isLogin, currentUser } = this.props;
+    const { locale, isLogin } = this.props;
     const currentAppLocale = AppLocale[locale];
 
     return (

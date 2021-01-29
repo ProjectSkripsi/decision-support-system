@@ -3,6 +3,7 @@ import {
   SUBMIT_NEW_MODEL_REQUEST,
   DELETE_MODEL_REQUEST,
   PUBLISH_MODEL_REQUEST,
+  UPDATE_CURRICULUM_REQUEST,
 } from '../actions';
 import {
   sumbitModelSuccess,
@@ -11,11 +12,14 @@ import {
   deleteModelError,
   publishModelSuccess,
   publishModelError,
+  updateCurriculumSuccess,
+  updateCurriculumError,
 } from './actions';
 import {
   sumbitModelService,
   deleteModelService,
   publishModelService,
+  updateCurriculumService,
 } from './services';
 
 function* submitModelSaga({ payload }) {
@@ -59,6 +63,20 @@ function* publishModelSaga({ payload }) {
   }
 }
 
+function* updateCurriculumSaga({ payload }) {
+  const { title, fileUrl } = payload;
+  try {
+    const response = yield call(updateCurriculumService, title, fileUrl);
+    const { callBack } = payload;
+    if (callBack) {
+      callBack(response);
+    }
+    yield put(updateCurriculumSuccess(response));
+  } catch (error) {
+    yield put(updateCurriculumError(error));
+  }
+}
+
 export function* watchSubmitModelSaga() {
   yield takeEvery(SUBMIT_NEW_MODEL_REQUEST, submitModelSaga);
 }
@@ -71,8 +89,13 @@ export function* watchPublishModelSaga() {
   yield takeEvery(PUBLISH_MODEL_REQUEST, publishModelSaga);
 }
 
+export function* watchUpdateCurriculumSaga() {
+  yield takeEvery(UPDATE_CURRICULUM_REQUEST, updateCurriculumSaga);
+}
+
 export default function* rootSaga() {
   yield all([fork(watchSubmitModelSaga)]);
   yield all([fork(watchDeleteModelSaga)]);
   yield all([fork(watchPublishModelSaga)]);
+  yield all([fork(watchUpdateCurriculumSaga)]);
 }

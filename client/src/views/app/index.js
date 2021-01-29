@@ -19,6 +19,13 @@ const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
 const BlankPage = React.lazy(() =>
   import(/* webpackChunkName: "blank-page" */ './blank-page')
 );
+const MasterUser = React.lazy(() =>
+  import(/* webpackChunkName: "applications" */ './user')
+);
+
+const MasterPaud = React.lazy(() =>
+  import(/* webpackChunkName: "applications" */ './paud')
+);
 
 const App = ({ match }) => {
   return (
@@ -59,6 +66,14 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/blank-page`}
               render={(props) => <BlankPage {...props} />}
+            />
+            <Route
+              path={`${match.url}/master-user`}
+              render={(props) => <MasterUser {...props} />}
+            />
+            <Route
+              path={`${match.url}/master-paud`}
+              render={(props) => <MasterPaud {...props} />}
             />
             <Redirect to="/error" />
           </Switch>

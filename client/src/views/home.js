@@ -12,6 +12,7 @@ import GlideComponent from '../components/carousel/GlideComponent';
 import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
+import { getCurriculumService } from '../redux/model/services';
 
 const slideSettings = {
   type: 'carousel',
@@ -110,92 +111,18 @@ const features = [
   },
 ];
 
-// const layouts = [
-//   {
-//     title: 'Menu Default',
-//     img: '/assets/img/landing-page/layouts/menu-default.jpg',
-//   },
-//   {
-//     title: 'Menu Subhidden',
-//     img: '/assets/img/landing-page/layouts/menu-subhidden.jpg',
-//   },
-//   {
-//     title: 'Menu Hidden',
-//     img: '/assets/img/landing-page/layouts/menu-hidden.jpg',
-//   },
-//   {
-//     title: 'Image List',
-//     img: '/assets/img/landing-page/layouts/image-list.jpg',
-//   },
-//   {
-//     title: 'Thumb List',
-//     img: '/assets/img/landing-page/layouts/thumb-list.jpg',
-//   },
-//   { title: 'Data List', img: '/assets/img/landing-page/layouts/data-list.jpg' },
-//   { title: 'Details', img: '/assets/img/landing-page/layouts/details.jpg' },
-//   {
-//     title: 'Authentication',
-//     img: '/assets/img/landing-page/layouts/authentication.jpg',
-//   },
-//   {
-//     title: 'Search Results',
-//     img: '/assets/img/landing-page/layouts/search-result.jpg',
-//   },
-//   {
-//     title: 'Single Page Application',
-//     img: '/assets/img/landing-page/layouts/spa.jpg',
-//   },
-//   {
-//     title: 'Data List App Menu Hidden',
-//     img: '/assets/img/landing-page/layouts/data-list-app-menu-hidden.jpg',
-//   },
-//   { title: 'Tabs', img: '/assets/img/landing-page/layouts/tabs.jpg' },
-// ];
-
-// const applications = [
-//   {
-//     title: 'Survey',
-//     path: `${adminRoot}/applications/survey`,
-//     img: '/assets/img/landing-page/applications/survey.jpg',
-//   },
-//   {
-//     title: 'Chat',
-//     path: `${adminRoot}/applications/chat`,
-//     img: '/assets/img/landing-page/applications/chat.jpg',
-//   },
-//   {
-//     title: 'Todo',
-//     path: `${adminRoot}/applications/todo`,
-//     img: '/assets/img/landing-page/applications/todo.jpg',
-//   },
-// ];
-
-// const themes = [
-//   { title: 'Navy Blue', class: 'bluenavy' },
-//   { title: 'Olympic Blue', class: 'blueolympic' },
-//   { title: 'Yale Blue', class: 'blueyale' },
-//   { title: 'Moss Green', class: 'greenmoss' },
-//   { title: 'Lime Green', class: 'greenlime' },
-//   { title: 'Carrot Orange', class: 'carrotorange' },
-//   { title: 'Ruby Red', class: 'rubyred' },
-//   { title: 'Monster Purple', class: 'monsterpurple' },
-//   { title: 'Steel Grey', class: 'steelgrey' },
-//   { title: 'Granola Yellow', class: 'granolayellow' },
-// ];
-
 const Home = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [data, setData] = useState({});
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
   const refSectionFooter = useRef(null);
-  // const [activeTab, setActiveTab] = useState(0);
-  // const [isOpenSizingLg, setIsOpenSizingLg] = useState(false);
 
   useEffect(() => {
     window.addEventListener('scroll', onWindowScroll);
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', onWindowClick);
-
+    fetch();
     document.body.classList.add('no-footer');
     return () => {
       window.removeEventListener('scroll', onWindowScroll);
@@ -204,6 +131,11 @@ const Home = () => {
       document.body.classList.remove('no-footer');
     };
   }, []);
+
+  const fetch = async () => {
+    const data = await getCurriculumService();
+    setData(data.data[0]);
+  };
 
   const onWindowResize = (event) => {
     const homeRect = refRowHome.current.getBoundingClientRect();
@@ -239,15 +171,8 @@ const Home = () => {
     return false;
   };
 
-  // const toggle = (tab) => {
-  //   if (activeTab !== tab) setActiveTab(tab);
-  // };
-
   const onDownload = () => {
-    const blob = new Blob(['Hello, world!'], {
-      type: 'text/plain;charset=utf-8',
-    });
-    saveAs(blob, 'hello world.txt');
+    saveAs(data.fileUrl, `${data.title}.pdf`);
   };
 
   return (
@@ -257,14 +182,15 @@ const Home = () => {
       })}
     >
       <div className="mobile-menu" onClick={(event) => event.stopPropagation()}>
-        <img
-          style={{ cursor: 'pointer' }}
-          src="/assets/logos/white-full.png"
-          height="10%"
-          alt="Logo"
-          href="/"
-          onClick={(event) => scrollTo(event, 'home')}
-        />
+        <NavLink to="/">
+          <img
+            style={{ cursor: 'pointer' }}
+            src="/assets/logos/white-full.png"
+            height="10%"
+            alt="Logo"
+            onClick={(event) => scrollTo(event, 'home')}
+          />
+        </NavLink>
         <ul className="navbar-nav">
           <li className="nav-item">
             <a

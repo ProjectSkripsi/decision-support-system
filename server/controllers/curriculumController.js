@@ -12,19 +12,20 @@ module.exports = {
   },
 
   updateCurriculum: async (req, res) => {
-    const { fileUrl } = req.body;
+    const { fileUrl, title } = req.body;
     const { id } = req.params;
     try {
       const response = await Curriculum.findByIdAndUpdate(
         { _id: id },
         {
           fileUrl,
+          title,
         },
         {
           returnOriginal: false,
         }
       );
-      res.status(201).json(response);
+      res.status(200).json(response);
     } catch (error) {
       res.status(500).json(error);
     }

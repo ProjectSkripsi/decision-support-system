@@ -84,6 +84,10 @@ export const PUBLISH_MODEL_REQUEST = 'PUBLISH_MODEL_REQUEST';
 export const PUBLISH_MODEL_SUCCESS = 'PUBLISH_MODEL_SUCCESS';
 export const PUBLISH_MODEL_ERROR = 'PUBLISH_MODEL_ERROR';
 
+export const UPDATE_CURRICULUM_REQUEST = 'UPDATE_CURRICULUM_REQUEST';
+export const UPDATE_CURRICULUM_SUCCESS = 'UPDATE_CURRICULUM_SUCCESS';
+export const UPDATE_CURRICULUM_ERROR = 'UPDATE_CURRICULUM_ERROR';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';

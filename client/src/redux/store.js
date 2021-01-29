@@ -8,39 +8,39 @@ const sagaMiddleware = createSagaMiddleware();
 const logger = createLogger();
 const middlewares = [sagaMiddleware];
 
-// export function configureStore(initialState) {
-//   const store = createStore(
-//     reducers,
-//     initialState,
-//     compose(applyMiddleware(...middlewares, logger))
-//   );
+export function configureStore(initialState) {
+  // const store = createStore(
+  //   reducers,
+  //   initialState,
+  //   compose(applyMiddleware(...middlewares, logger))
+  // );
 
-//   // const store = createStore(
-//   //   reducers,
-//   //   initialState,
-//   //   compose(applyMiddleware(...middlewares))
-//   // );
+  const store = createStore(
+    reducers,
+    initialState,
+    compose(applyMiddleware(...middlewares))
+  );
 
-//   sagaMiddleware.run(sagas);
+  sagaMiddleware.run(sagas);
 
-//   if (module.hot) {
-//     module.hot.accept('./reducers', () => {
-//       const nextRootReducer = require('./reducers');
-//       store.replaceReducer(nextRootReducer);
-//     });
-//   }
+  if (module.hot) {
+    module.hot.accept('./reducers', () => {
+      const nextRootReducer = require('./reducers');
+      store.replaceReducer(nextRootReducer);
+    });
+  }
 
-//   return store;
-// }
-
-const store = createStore(
-  reducers,
-  // initialState,
-  compose(applyMiddleware(...middlewares, logger))
-);
-
-sagaMiddleware.run(sagas);
-
-export function configureStore() {
   return store;
 }
+
+// const store = createStore(
+//   reducers,
+//   // initialState,
+//   compose(applyMiddleware(...middlewares))
+// );
+
+// sagaMiddleware.run(sagas);
+
+// export function configureStore() {
+//   return store;
+// }

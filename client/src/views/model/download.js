@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { adminRoot } from '../../constants/defaultValues';
 import { NavLink } from 'react-router-dom';
 import {
   DropdownToggle,
@@ -14,6 +13,7 @@ import Headroom from 'react-headroom';
 
 import axios from 'axios';
 
+import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
 import AddNewModal from '../../containers/pages/AddNewModal';
 import ListPageListing from '../../components/Model/ListPageListing';
@@ -46,8 +46,6 @@ const Home = ({ match }) => {
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
   const refSectionFooter = useRef(null);
-  // const [activeTab, setActiveTab] = useState(0);
-  // const [isOpenSizingLg, setIsOpenSizingLg] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +54,7 @@ const Home = ({ match }) => {
     column: 'title',
     label: 'Product Name',
   });
-
+  const [data, setData] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [totalItemCount, setTotalItemCount] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
@@ -69,7 +67,7 @@ const Home = ({ match }) => {
     window.addEventListener('scroll', onWindowScroll);
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('click', onWindowClick);
-
+    fetch();
     document.body.classList.add('no-footer');
     return () => {
       window.removeEventListener('scroll', onWindowScroll);
@@ -78,6 +76,11 @@ const Home = ({ match }) => {
       document.body.classList.remove('no-footer');
     };
   }, []);
+
+  const fetch = async () => {
+    const data = await getCurriculumService();
+    setData(data.data[0]);
+  };
 
   const onWindowResize = (event) => {
     const homeRect = refRowHome.current.getBoundingClientRect();
@@ -113,15 +116,8 @@ const Home = ({ match }) => {
     return false;
   };
 
-  // const toggle = (tab) => {
-  //   if (activeTab !== tab) setActiveTab(tab);
-  // };
-
   const onDownload = () => {
-    const blob = new Blob(['Hello, world!'], {
-      type: 'text/plain;charset=utf-8',
-    });
-    saveAs(blob, 'hello world.txt');
+    saveAs(data.fileUrl, `${data.title}.pdf`);
   };
 
   useEffect(() => {
@@ -132,7 +128,6 @@ const Home = ({ match }) => {
     async function fetchData() {
       axios
         .get(
-          // `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${selectedOrderOption.column}&search=${search}`
           `http://localhost:4000/api/v1/model/public/${selectedPageSize}/${currentPage}?search=${search}`
         )
         .then((res) => {
@@ -140,11 +135,6 @@ const Home = ({ match }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          // setItems(
-          //   data.data.map((x) => {
-          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
-          //   })
-          // );
           setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
@@ -243,6 +233,7 @@ const Home = ({ match }) => {
           href="/"
           onClick={(event) => scrollTo(event, 'home')}
         />
+
         <ul className="navbar-nav">
           <li className="nav-item">
             <NavLink to="/">HOME</NavLink>

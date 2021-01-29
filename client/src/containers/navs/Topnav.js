@@ -3,19 +3,15 @@
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
 import { injectIntl } from 'react-intl';
-
 import {
   UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Input,
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import IntlMessages from '../../helpers/IntlMessages';
 import {
   setContainerClassnames,
   clickOnMobileMenu,
@@ -26,15 +22,10 @@ import {
 import {
   menuHiddenBreakpoint,
   searchPath,
-  localeOptions,
   isDarkSwitchActive,
-  buyUrl,
-  adminRoot,
 } from '../../constants/defaultValues';
 
 import { MobileMenuIcon, MenuIcon } from '../../components/svg';
-import TopnavEasyAccess from './Topnav.EasyAccess';
-import TopnavNotifications from './Topnav.Notifications';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
 import { getDirection, setDirection } from '../../helpers/Utils';
@@ -52,7 +43,6 @@ const TopNav = ({
   changeLocaleAction,
   currentUser,
 }) => {
-  console.log(currentUser);
   const [isInFullScreen, setIsInFullScreen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
 

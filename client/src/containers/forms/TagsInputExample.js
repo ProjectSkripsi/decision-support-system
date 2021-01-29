@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { injectIntl } from 'react-intl';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
