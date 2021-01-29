@@ -2,11 +2,12 @@
 import React, { Component } from 'react';
 import DropzoneComponent from 'react-dropzone-component';
 import 'dropzone/dist/min/dropzone.min.css';
+import { baseUrl } from '../../constants/defaultValues';
 
 const ReactDOMServer = require('react-dom/server');
 
 const dropzoneComponentConfig = {
-  postUrl: 'http://localhost:4000/api/v1/upload/image',
+  postUrl: `${baseUrl}/upload/image`,
 };
 
 const dropzoneConfig = {
