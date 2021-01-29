@@ -11,6 +11,7 @@ import {
   publishModel,
 } from '../../../../redux/actions';
 import { getToken } from '../../../../helpers/Utils';
+import { baseUrl } from '../../../../constants/defaultValues';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -72,7 +73,7 @@ const DataListPages = ({
     async function fetchData() {
       axios
         .get(
-          `http://localhost:4000/api/v1/model/${selectedPageSize}/${currentPage}?search=${search}`,
+          `${baseUrl}/model/${selectedPageSize}/${currentPage}?search=${search}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -169,8 +170,7 @@ const DataListPages = ({
   const fetchNew = async () => {
     axios
       .get(
-        // `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&search=${search}`
-        `http://localhost:4000/api/v1/model/${selectedPageSize}/${currentPage}?search=${search}`,
+        `${baseUrl}/model/${selectedPageSize}/${currentPage}?search=${search}`,
         {
           headers: {
             Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGUwMmJiOGE0ZTI4ZDM5NGY4MzhjMyIsImVtYWlsIjoiYWRtaW5AZ29kLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxMTUzNDQzMH0.PiUcMSGxCF-oqp31zlew8nytZ-CV6Y1mImxzZ_cebg8`,

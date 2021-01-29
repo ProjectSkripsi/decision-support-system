@@ -13,6 +13,7 @@ import Headroom from 'react-headroom';
 
 import axios from 'axios';
 
+import { baseUrl } from '../../constants/defaultValues';
 import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
 import AddNewModal from '../../containers/pages/AddNewModal';
@@ -128,7 +129,7 @@ const Home = ({ match }) => {
     async function fetchData() {
       axios
         .get(
-          `http://localhost:4000/api/v1/model/public/${selectedPageSize}/${currentPage}?search=${search}`
+          `${baseUrl}/model/public/${selectedPageSize}/${currentPage}?search=${search}`
         )
         .then((res) => {
           return res.data;

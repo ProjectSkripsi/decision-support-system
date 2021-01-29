@@ -10,7 +10,7 @@ import classnames from 'classnames';
 import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
-
+import { baseUrl } from '../../constants/defaultValues';
 import axios from 'axios';
 import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
@@ -128,7 +128,7 @@ const Home = ({ match }) => {
     async function fetchData() {
       axios
         .get(
-          `http://localhost:4000/api/v1/model/public/${selectedPageSize}/${currentPage}?search=${search}`
+          `${baseUrl}/model/public/${selectedPageSize}/${currentPage}?search=${search}`
         )
         .then((res) => {
           return res.data;
