@@ -23,7 +23,7 @@ const BlankPage = ({ match }) => {
                 <CardTitle>File Kurikulum</CardTitle>
                 <DropzoneExample ref={dropzone} />
                 <Button color="primary" className="mt-4">
-                  <IntlMessages id="forms.submit" />
+                  UPDATE
                 </Button>
               </Form>
             </CardBody>

@@ -76,6 +76,14 @@ export const SUBMIT_NEW_MODEL_REQUEST = 'SUBMIT_NEW_MODEL_REQUEST';
 export const SUBMIT_NEW_MODEL_SUCCESS = 'SUBMIT_NEW_MODEL_SUCCESS';
 export const SUBMIT_NEW_MODEL_ERROR = 'SUBMIT_NEW_MODEL_ERROR';
 
+export const DELETE_MODEL_REQUEST = 'DELETE_MODEL_REQUEST';
+export const DELETE_MODEL_SUCCESS = 'DELETE_MODEL_SUCCESS';
+export const DELETE_MODEL_ERROR = 'DELETE_MODEL_ERROR';
+
+export const PUBLISH_MODEL_REQUEST = 'PUBLISH_MODEL_REQUEST';
+export const PUBLISH_MODEL_SUCCESS = 'PUBLISH_MODEL_SUCCESS';
+export const PUBLISH_MODEL_ERROR = 'PUBLISH_MODEL_ERROR';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';

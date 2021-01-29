@@ -8,13 +8,21 @@ import {
   CardText,
   CustomInput,
   Badge,
+  Button,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
 
-const ImageListView = ({ product, isSelect, collect, onCheckItem }) => {
+const ImageListView = ({
+  product,
+  isSelect,
+  collect,
+  onCheckItem,
+  publishModel,
+  isAdmin,
+}) => {
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={product._id}>
       <ContextMenuTrigger id="menu_id" data={product._id} collect={collect}>
@@ -28,13 +36,15 @@ const ImageListView = ({ product, isSelect, collect, onCheckItem }) => {
             <NavLink to={`?p=${product._id}`} className="w-40 w-sm-100">
               <CardImg top alt={product.title} src={product.coverUrl} />
             </NavLink>
-            <Badge
-              color={product.isPublish ? 'primary' : 'secondary'}
-              pill
-              className="position-absolute badge-top-left"
-            >
-              {product.isPublish ? 'PUBLISH' : 'ON HOLD'}
-            </Badge>
+            {isAdmin && (
+              <Badge
+                color={product.isPublish ? 'primary' : 'secondary'}
+                pill
+                className="position-absolute badge-top-left"
+              >
+                {product.isPublish ? 'PUBLISH' : 'ON HOLD'}
+              </Badge>
+            )}
           </div>
           <CardBody>
             <Row>
@@ -54,6 +64,27 @@ const ImageListView = ({ product, isSelect, collect, onCheckItem }) => {
                   {product.year}
                 </CardText>
               </Colxx>
+              {isAdmin && (
+                <>
+                  <Button
+                    color="primary"
+                    size="lg"
+                    block
+                    className="mb-1"
+                    onClick={() =>
+                      publishModel(
+                        product._id,
+                        product.isPublish ? 'unpublish' : 'publish'
+                      )
+                    }
+                  >
+                    {product.isPublish ? 'HOLD' : 'PUBLISH'}
+                  </Button>{' '}
+                  <Button color="secondary" size="lg" block outline>
+                    Update
+                  </Button>{' '}
+                </>
+              )}
             </Row>
           </CardBody>
         </Card>

@@ -2,9 +2,9 @@ const Curriculum = require("../models/curriculum");
 
 module.exports = {
   addCurriculum: async (req, res) => {
-    const { fileUrl } = req.body;
+    const { fileUrl, title } = req.body;
     try {
-      const response = await Curriculum.create({ fileUrl });
+      const response = await Curriculum.create({ title, fileUrl });
       res.status(201).json(response);
     } catch (error) {
       res.status(500).json(error);
@@ -32,7 +32,7 @@ module.exports = {
 
   getCurriculum: async (req, res) => {
     try {
-      const response = await Curriculum.find({});
+      const response = await Curriculum.find({ deleteAt: null });
       res.status(200).json(response);
     } catch (error) {
       res.status(500).json(error);

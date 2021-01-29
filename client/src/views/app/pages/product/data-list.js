@@ -5,7 +5,12 @@ import ListPageHeading from '../../../../containers/pages/ListPageHeading';
 import AddNewModal from '../../../../components/Model/AddNewModal';
 import ListPageListing from '../../../../components/Model/ListPageListing';
 import useMousetrap from '../../../../hooks/use-mousetrap';
-import { sumbitModel } from '../../../../redux/actions';
+import {
+  sumbitModel,
+  deleteModel,
+  publishModel,
+} from '../../../../redux/actions';
+import { getToken } from '../../../../helpers/Utils';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -23,7 +28,12 @@ const orderOptions = [
 ];
 const pageSizes = [4, 8, 12, 20];
 
-const DataListPages = ({ match, submitModelAction }) => {
+const DataListPages = ({
+  match,
+  submitModelAction,
+  deleteModelAction,
+  publishModelAction,
+}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,14 +68,14 @@ const DataListPages = ({ match, submitModelAction }) => {
   }, [selectedPageSize, selectedOrderOption]);
 
   useEffect(() => {
+    const token = getToken();
     async function fetchData() {
       axios
         .get(
-          // `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&search=${search}`
           `http://localhost:4000/api/v1/model/${selectedPageSize}/${currentPage}?search=${search}`,
           {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGUwMmJiOGE0ZTI4ZDM5NGY4MzhjMyIsImVtYWlsIjoiYWRtaW5AZ29kLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxMTUzNDQzMH0.PiUcMSGxCF-oqp31zlew8nytZ-CV6Y1mImxzZ_cebg8`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )
@@ -74,7 +84,6 @@ const DataListPages = ({ match, submitModelAction }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-
           setItems(data.data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
@@ -147,11 +156,37 @@ const DataListPages = ({ match, submitModelAction }) => {
   };
 
   const onSubmit = (event, errors, values) => {
-    console.log(errors);
-    console.log(state);
     if (errors.length === 0) {
-      submitModelAction(state);
+      submitModelAction(state, (callBack) => {
+        if (callBack.status === 201) {
+          setModalOpen(!modalOpen);
+          fetchNew();
+        }
+      });
     }
+  };
+
+  const fetchNew = async () => {
+    axios
+      .get(
+        // `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&search=${search}`
+        `http://localhost:4000/api/v1/model/${selectedPageSize}/${currentPage}?search=${search}`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGUwMmJiOGE0ZTI4ZDM5NGY4MzhjMyIsImVtYWlsIjoiYWRtaW5AZ29kLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxMTUzNDQzMH0.PiUcMSGxCF-oqp31zlew8nytZ-CV6Y1mImxzZ_cebg8`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data;
+      })
+      .then((data) => {
+        setTotalPage(data.totalPage);
+        setItems(data.data);
+        setSelectedItems([]);
+        setTotalItemCount(data.totalItem);
+        setIsLoaded(true);
+      });
   };
 
   useMousetrap(['ctrl+a', 'command+a'], () => {
@@ -176,6 +211,22 @@ const DataListPages = ({ match, submitModelAction }) => {
   const onUploadFile = (file) => {
     const img = JSON.parse(file.xhr.response);
     setState((prevState) => ({ ...prevState, fileUrl: img.fileUrl }));
+  };
+
+  const onDelete = () => {
+    deleteModelAction(selectedItems, (callBack) => {
+      if (callBack.status === 200) {
+        fetchNew();
+      }
+    });
+  };
+
+  const publishModel = (id, type) => {
+    publishModelAction(id, type, (callBack) => {
+      if (callBack.status === 200) {
+        fetchNew();
+      }
+    });
   };
 
   const startIndex = (currentPage - 1) * selectedPageSize;
@@ -214,6 +265,7 @@ const DataListPages = ({ match, submitModelAction }) => {
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
           isAdmin
+          onDelete={onDelete}
         />
         <AddNewModal
           modalOpen={modalOpen}
@@ -240,10 +292,16 @@ const DataListPages = ({ match, submitModelAction }) => {
           onContextMenuClick={onContextMenuClick}
           onContextMenu={onContextMenu}
           onChangePage={setCurrentPage}
+          publishModel={publishModel}
+          isAdmin
         />
       </div>
     </>
   );
 };
 
-export default connect(null, { submitModelAction: sumbitModel })(DataListPages);
+export default connect(null, {
+  submitModelAction: sumbitModel,
+  deleteModelAction: deleteModel,
+  publishModelAction: publishModel,
+})(DataListPages);

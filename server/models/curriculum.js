@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 const curriculumSchema = new Schema(
   {
+    title: {
+      type: String,
+    },
     fileUrl: {
       type: String,
     },

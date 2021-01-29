@@ -4,10 +4,11 @@ const User = require("../models/user");
 module.exports = {
   isLogin: (req, res, next) => {
     const bearerHeader = req.headers["authorization"];
+
     if (typeof bearerHeader !== "undefined") {
       const bearer = bearerHeader.split(" ");
       const bearerToken = bearer[1];
-      console.log(bearerToken);
+
       let verify = hash.jwtDecode(bearerToken);
       User.findOne({
         _id: verify.id,

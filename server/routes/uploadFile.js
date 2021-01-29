@@ -43,7 +43,8 @@ router.post(
   upload.single("file"),
   function (req, res) {
     const { host } = req.headers;
-    const urlFile = `https://${host}/uploads/${req.file.filename}`;
+    const fullUrl = req.protocol;
+    const urlFile = `${fullUrl}://${host}/uploads/${req.file.filename}`;
     res.send({
       status: 200,
       message: "Your file is successfully uploaded",
@@ -57,8 +58,9 @@ router.post(
 
   uploadImages.single("file"),
   function (req, res) {
+    const fullUrl = req.protocol;
     const { host } = req.headers;
-    const urlFile = `https://${host}/images/${req.file.filename}`;
+    const urlFile = `${fullUrl}://${host}/images/${req.file.filename}`;
     res.send({
       status: 200,
       message: "Your file is successfully uploaded",

@@ -50,7 +50,6 @@ module.exports = {
     try {
       const response = await Model.find(findCondition)
         .sort([["createdAt", "DESC"]])
-
         .limit(Number(pageSize) * 1)
         .skip(skip);
       const count = await Model.countDocuments(findCondition);
@@ -86,7 +85,6 @@ module.exports = {
     try {
       const response = await Model.find(findCondition)
         .sort([["createdAt", "DESC"]])
-
         .limit(Number(pageSize) * 1)
         .skip(skip);
       const count = await Model.countDocuments(findCondition);
@@ -98,6 +96,38 @@ module.exports = {
         totalItem: count,
         totalPage: Math.ceil(count / Number(pageSize)),
       });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  publishModel: async (req, res) => {
+    try {
+      const { id, type } = req.params;
+      const isType = type === "publish";
+      const response = await Model.updateOne(
+        {
+          _id: id,
+        },
+        {
+          isPublish: isType,
+        }
+      );
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  deleteModel: async (req, res) => {
+    try {
+      const { ids } = req.body;
+      const response = await Model.updateMany(
+        { _id: { $in: ids } },
+        { $set: { deleteAt: Date.now() } },
+        { multi: true }
+      );
+      res.status(200).json(response);
     } catch (error) {
       res.status(500).json(error);
     }
