@@ -27,11 +27,11 @@ export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
 }
 
-const loginWithEmailPasswordAsync = async (email, password) =>
-  await auth
-    .signInWithEmailAndPassword(email, password)
-    .then((user) => user)
-    .catch((error) => error);
+// const loginWithEmailPasswordAsync = async (email, password) =>
+//   await auth
+//     .signInWithEmailAndPassword(email, password)
+//     .then((user) => user)
+//     .catch((error) => error);
 
 function* loginWithEmailPassword({ payload }) {
   const { email, password } = payload.user;

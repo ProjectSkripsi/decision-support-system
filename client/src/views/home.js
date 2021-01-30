@@ -225,7 +225,7 @@ const Home = () => {
             </span>
           </li>
           <li className="nav-item">
-            <NavLink to="/user/login">LOGIN</NavLink>
+            <NavLink to="/login">LOGIN</NavLink>
           </li>
         </ul>
       </div>
