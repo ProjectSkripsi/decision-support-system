@@ -12,6 +12,7 @@ module.exports = {
       equivalenceModule,
       year,
       score,
+      author,
     } = req.body.data;
     try {
       const response = await Model.create({
@@ -24,6 +25,7 @@ module.exports = {
         equivalenceModule,
         year,
         score,
+        author,
       });
       res.status(201).json(response);
     } catch (error) {

@@ -30,6 +30,9 @@ const modelSchema = new Schema(
     score: {
       type: String,
     },
+    author: {
+      type: String,
+    },
     isPublish: {
       type: Boolean,
       default: false,
