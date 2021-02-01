@@ -281,7 +281,7 @@ const DataListPages = ({
   };
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
-  console.log(isUpdate);
+
   return !isLoaded ? (
     <div className="loading" />
   ) : (
