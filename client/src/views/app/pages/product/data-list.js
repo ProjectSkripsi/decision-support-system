@@ -9,9 +9,11 @@ import {
   sumbitModel,
   deleteModel,
   publishModel,
+  updateModel,
 } from '../../../../redux/actions';
 import { getToken } from '../../../../helpers/Utils';
-import { baseUrl } from '../../../../constants/defaultValues';
+import { adminRoot, baseUrl } from '../../../../constants/defaultValues';
+import { NotificationManager } from '../../../../components/common/react-notifications';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -34,6 +36,8 @@ const DataListPages = ({
   submitModelAction,
   deleteModelAction,
   publishModelAction,
+  updateModelAction,
+  history,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
@@ -51,7 +55,8 @@ const DataListPages = ({
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
-
+  const [isRemoveCover, setIsRemoveCover] = useState(false);
+  const [isRemoveFile, setIsRemoveFile] = useState(false);
   const [state, setState] = useState({
     title: '',
     description: '',
@@ -60,9 +65,12 @@ const DataListPages = ({
     score: '',
     learningConcept: '',
     year: '',
-    coverUrl: '',
-    fileUrl: '',
+    coverUrl: null,
+    fileUrl: null,
+    author: '',
   });
+
+  const [isUpdate, setIsUpdate] = useState(false);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -157,13 +165,54 @@ const DataListPages = ({
   };
 
   const onSubmit = (event, errors, values) => {
-    if (errors.length === 0) {
-      submitModelAction(state, (callBack) => {
-        if (callBack.status === 201) {
-          setModalOpen(!modalOpen);
-          fetchNew();
-        }
-      });
+    console.log(isUpdate);
+    if (
+      errors.length === 0 &&
+      state.coverUrl !== undefined &&
+      state.fileUrl !== undefined
+    ) {
+      if (!isUpdate) {
+        submitModelAction(state, (callBack) => {
+          if (callBack.status === 201) {
+            setModalOpen(!modalOpen);
+            fetchNew();
+            createNotification('success', 'Berhasil menambahkan model');
+          }
+        });
+      } else {
+        updateModelAction(state, state._id, (callBack) => {
+          if (callBack.status === 200) {
+            setModalOpen(!modalOpen);
+            fetchNew();
+            setIsUpdate(!isUpdate);
+            createNotification('success', 'Berhasil update model');
+          }
+        });
+      }
+    } else {
+      createNotification('error');
+    }
+  };
+
+  const createNotification = (type, msg, className) => {
+    const cName = className || '';
+    switch (type) {
+      case 'success':
+        NotificationManager.success('Sukses!', msg, 3000, null, null, cName);
+        break;
+      case 'error':
+        NotificationManager.error(
+          'Terjadi Kesalahan!',
+          'Silahkan lengkapi data',
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      default:
+        NotificationManager.info('Info message');
+        break;
     }
   };
 
@@ -221,17 +270,18 @@ const DataListPages = ({
     });
   };
 
-  const publishModel = (id, type) => {
-    publishModelAction(id, type, (callBack) => {
-      if (callBack.status === 200) {
-        fetchNew();
-      }
-    });
+  const toDetailModel = (id) => {
+    history.push(`${adminRoot}/pages/model/details?id=${id}`);
   };
 
+  const doUpdate = (data) => {
+    setState(data);
+    setIsUpdate(!isUpdate);
+    setModalOpen(!modalOpen);
+  };
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
-
+  console.log(isUpdate);
   return !isLoaded ? (
     <div className="loading" />
   ) : (
@@ -263,13 +313,24 @@ const DataListPages = ({
           }}
           orderOptions={orderOptions}
           pageSizes={pageSizes}
-          toggleModal={() => setModalOpen(!modalOpen)}
+          toggleModal={() => {
+            setModalOpen(!modalOpen);
+            setIsUpdate(false);
+            setState({});
+            setIsRemoveCover(false);
+            setIsRemoveFile(false);
+          }}
           isAdmin
           onDelete={onDelete}
         />
         <AddNewModal
           modalOpen={modalOpen}
-          toggleModal={() => setModalOpen(!modalOpen)}
+          toggleModal={() => {
+            setModalOpen(!modalOpen);
+            setIsUpdate(false);
+            setIsRemoveCover(false);
+            setIsRemoveFile(false);
+          }}
           onSubmit={onSubmit}
           data={state}
           onChange={onChange}
@@ -281,6 +342,11 @@ const DataListPages = ({
           }}
           onUploadImg={onUploadImg}
           onUploadFile={onUploadFile}
+          isUpdate={isUpdate}
+          isRemoveCover={isRemoveCover}
+          isRemoveFile={isRemoveFile}
+          setIsRemoveCover={setIsRemoveCover}
+          setIsRemoveFile={setIsRemoveFile}
         />
         <ListPageListing
           items={items}
@@ -292,8 +358,9 @@ const DataListPages = ({
           onContextMenuClick={onContextMenuClick}
           onContextMenu={onContextMenu}
           onChangePage={setCurrentPage}
-          publishModel={publishModel}
           isAdmin
+          toDetailModel={toDetailModel}
+          doUpdate={doUpdate}
         />
       </div>
     </>
@@ -304,4 +371,5 @@ export default connect(null, {
   submitModelAction: sumbitModel,
   deleteModelAction: deleteModel,
   publishModelAction: publishModel,
+  updateModelAction: updateModel,
 })(DataListPages);

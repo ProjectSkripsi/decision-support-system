@@ -156,4 +156,46 @@ module.exports = {
       res.status(500).json(error);
     }
   },
+
+  updateModel: async (req, res) => {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      fileUrl,
+      coverUrl,
+      learningConcept,
+      teacherExpertise,
+      equivalenceModule,
+      year,
+      score,
+      author,
+    } = req.body;
+    console.log(req.body);
+    try {
+      const response = await Model.findByIdAndUpdate(
+        {
+          _id: id,
+        },
+        {
+          title,
+          description,
+          fileUrl,
+          coverUrl,
+          learningConcept,
+          teacherExpertise,
+          equivalenceModule,
+          year,
+          score,
+          author,
+        },
+        {
+          returnOriginal: false,
+        }
+      );
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };

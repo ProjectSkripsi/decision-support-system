@@ -10,7 +10,7 @@ import classnames from 'classnames';
 import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
-import { baseUrl } from '../../constants/defaultValues';
+import { baseUrl, adminRoot } from '../../constants/defaultValues';
 import axios from 'axios';
 import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
@@ -40,7 +40,7 @@ const categories = [
   { label: 'Desserts', value: 'Desserts', key: 2 },
 ];
 
-const Home = ({ match }) => {
+const Home = ({ match, history }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
@@ -217,6 +217,9 @@ const Home = ({ match }) => {
 
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
+  const toDetailModel = (id) => {
+    history.push(`${adminRoot}/pages/model/details?id=${id}`);
+  };
 
   return (
     <div
@@ -377,6 +380,7 @@ const Home = ({ match }) => {
                         onContextMenuClick={onContextMenuClick}
                         onContextMenu={onContextMenu}
                         onChangePage={setCurrentPage}
+                        toDetailModel={toDetailModel}
                       />
                     </div>
                   </>

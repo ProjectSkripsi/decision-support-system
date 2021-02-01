@@ -21,7 +21,7 @@ const thumbs = [
   '/assets/img/products/parkin-thumb.jpg',
 ];
 
-const GalleryDetail = () => {
+const GalleryDetail = ({ data }) => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 

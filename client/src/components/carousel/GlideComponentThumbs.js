@@ -177,7 +177,7 @@ class GlideComponentThumbs extends React.Component {
               })}
             </div>
           </div>
-          {this.state.renderArrows && (
+          {/* {this.state.renderArrows && (
             <div className="glide__arrows" data-glide-el="controls">
               <button
                 className="glide__arrow glide__arrow--left"
@@ -192,7 +192,7 @@ class GlideComponentThumbs extends React.Component {
                 <i className="simple-icon-arrow-right" />
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     );

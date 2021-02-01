@@ -88,6 +88,14 @@ export const UPDATE_CURRICULUM_REQUEST = 'UPDATE_CURRICULUM_REQUEST';
 export const UPDATE_CURRICULUM_SUCCESS = 'UPDATE_CURRICULUM_SUCCESS';
 export const UPDATE_CURRICULUM_ERROR = 'UPDATE_CURRICULUM_ERROR';
 
+export const GET_MODEL_BY_ID_REQUEST = 'GET_MODEL_BY_ID_REQUEST';
+export const GET_MODEL_BY_ID_SUCCESS = 'GET_MODEL_BY_ID_SUCCESS';
+export const GET_MODEL_BY_ID_ERROR = 'GET_MODEL_BY_ID_ERROR';
+
+export const UPDATE_MODEL_REQUEST = 'UPDATE_MODEL_REQUEST';
+export const UPDATE_MODEL_SUCCESS = 'UPDATE_MODEL_SUCCESS';
+export const UPDATE_MODEL_ERROR = 'UPDATE_MODEL_ERROR';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';

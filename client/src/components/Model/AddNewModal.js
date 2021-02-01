@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, Label } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 import {
   AvForm,
   AvField,
@@ -9,8 +10,10 @@ import {
   AvRadioGroup,
   AvRadio,
 } from 'availity-reactstrap-validation';
+import Lightbox from 'react-image-lightbox';
 import IntlMessages from '../../helpers/IntlMessages';
 import DropzoneExample from '../../containers/forms/DropzoneExample';
+import DropzoneCover from '../../containers/forms/DropzoneCover';
 import { SliderTooltip } from '../../components/common/SliderTooltips';
 
 const AddNewModal = ({
@@ -22,7 +25,14 @@ const AddNewModal = ({
   setScore,
   onUploadImg,
   onUploadFile,
+  isUpdate,
+  isRemoveCover,
+  setIsRemoveCover,
+  isRemoveFile,
+  setIsRemoveFile,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const dropzone = useRef();
 
   return (
@@ -60,6 +70,16 @@ const AddNewModal = ({
             />
             <AvFeedback>Tahun wajib di isi!</AvFeedback>
           </AvGroup>
+          <AvGroup>
+            <Label>Pengarang</Label>
+            <AvInput
+              required
+              value={data.author}
+              name="author"
+              onChange={onChange}
+            />
+            <AvFeedback>Wajib di isi!</AvFeedback>
+          </AvGroup>
 
           <AvGroup>
             <AvField
@@ -67,10 +87,11 @@ const AddNewModal = ({
               name="equivalenceModule"
               required
               label="Kesetaraan Modul"
-              errorMessage="Please select an option!"
+              errorMessage="Wajib di isi!"
               onChange={onChange}
+              value={data.equivalenceModule}
             >
-              <option value="" />
+              {/* <option value="" /> */}
               <option>Tidak Ada</option>
               <option>Kurang</option>
               <option>Cukup</option>
@@ -83,10 +104,11 @@ const AddNewModal = ({
               name="teacherExpertise"
               required
               label="Keahlian Guru"
-              errorMessage="Please select an option!"
+              errorMessage="Wajib di isi!"
               onChange={onChange}
+              value={data.teacherExpertise}
             >
-              <option value="" />
+              {/* <option value="" /> */}
               <option>Tidak Ada</option>
               <option>Kurang</option>
               <option>Cukup</option>
@@ -99,15 +121,16 @@ const AddNewModal = ({
               name="description"
               id="description"
               required
+              value={data.description}
               onChange={onChange}
             />
-            <AvFeedback>Please enter some description!</AvFeedback>
+            <AvFeedback>Wajib di isi!</AvFeedback>
           </AvGroup>
-          <Label className="mt-3">Score</Label>
+          <Label className="mt-3">Kandungan Budaya Lokal</Label>
           <SliderTooltip
             min={0}
             max={100}
-            defaultValue={0}
+            defaultValue={data.score}
             className="mb-5"
             step={1}
             onChange={setScore}
@@ -117,6 +140,7 @@ const AddNewModal = ({
             className="error-l-150 "
             name="learningConcept"
             required
+            value={data.learningConcept}
           >
             <Label className="d-block mt-4">Konsep Pembelajaran</Label>
             <AvRadio
@@ -133,9 +157,82 @@ const AddNewModal = ({
             />
           </AvRadioGroup>
           <Label className="mt-4">Cover Model</Label>
-          <DropzoneExample ref={dropzone} onUpload={onUploadImg} />
+
+          {isUpdate ? (
+            isRemoveCover ? (
+              <DropzoneCover ref={dropzone} onUpload={onUploadImg} />
+            ) : (
+              <div />
+            )
+          ) : (
+            <DropzoneCover ref={dropzone} onUpload={onUploadImg} />
+          )}
+
+          {isUpdate && !isRemoveCover && (
+            <div className="col-6">
+              <NavLink to="#" location={{}}>
+                <div className="position-absolute card-top-buttons">
+                  <Button
+                    outline
+                    color="white"
+                    className="icon-button"
+                    onClick={() => {
+                      setIsRemoveCover(true);
+                    }}
+                  >
+                    <i className="simple-icon-trash" />
+                  </Button>
+                </div>
+                <img
+                  className="img-fluid border-radius"
+                  src={data.coverUrl}
+                  alt="thumbnail"
+                  style={{ height: '130px' }}
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />
+              </NavLink>
+            </div>
+          )}
+
           <Label className="mt-3">File Model</Label>
-          <DropzoneExample ref={dropzone} onUpload={onUploadFile} />
+          {isUpdate ? (
+            isRemoveFile ? (
+              <DropzoneExample ref={dropzone} onUpload={onUploadFile} />
+            ) : (
+              <div />
+            )
+          ) : (
+            <DropzoneExample ref={dropzone} onUpload={onUploadFile} />
+          )}
+
+          {isUpdate && !isRemoveFile && (
+            <div className="col-6">
+              <div className="position-absolute card-top-buttons">
+                <Button
+                  outline
+                  color="white"
+                  className="icon-button"
+                  onClick={() => {
+                    setIsRemoveFile(true);
+                  }}
+                >
+                  <i className="simple-icon-trash" />
+                </Button>
+              </div>
+              <a href={data.fileUrl} target="_blank">
+                <img
+                  className="img-fluid border-radius"
+                  src="https://icons.iconarchive.com/icons/graphicloads/filetype/256/pdf-icon.png"
+                  alt="thumbnail"
+                  style={{ height: '130px' }}
+                />
+              </a>
+            </div>
+          )}
+
+          {/* <DropzoneExample ref={dropzone} onUpload={onUploadFile} /> */}
 
           <Button color="primary" className="mt-5 mr-5 ml-4">
             Submit
@@ -149,6 +246,12 @@ const AddNewModal = ({
             <IntlMessages id="pages.cancel" />
           </Button>
         </AvForm>
+        {isOpen && (
+          <Lightbox
+            mainSrc={data.coverUrl}
+            onCloseRequest={() => setIsOpen(false)}
+          />
+        )}
       </ModalBody>
     </Modal>
   );

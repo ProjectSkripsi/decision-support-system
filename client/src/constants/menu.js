@@ -39,7 +39,7 @@ const data = [
     id: 'pages',
     icon: 'iconsminds-digital-drawing',
     label: 'menu.pages',
-    to: `${adminRoot}/pages/product/data-list`,
+    to: `${adminRoot}/pages/model/data-list`,
     // subs: [
     // {
     //   id: 'pages-authorization',

@@ -11,6 +11,12 @@ import {
   UPDATE_CURRICULUM_REQUEST,
   UPDATE_CURRICULUM_SUCCESS,
   UPDATE_CURRICULUM_ERROR,
+  GET_MODEL_BY_ID_REQUEST,
+  GET_MODEL_BY_ID_SUCCESS,
+  GET_MODEL_BY_ID_ERROR,
+  UPDATE_MODEL_REQUEST,
+  UPDATE_MODEL_SUCCESS,
+  UPDATE_MODEL_ERROR,
 } from '../actions';
 
 export const sumbitModel = (data, callBack) => ({
@@ -70,5 +76,35 @@ export const updateCurriculumSuccess = (response) => ({
 
 export const updateCurriculumError = (error) => ({
   type: UPDATE_CURRICULUM_ERROR,
+  payload: { error },
+});
+
+export const getModelById = (id, callBack) => ({
+  type: GET_MODEL_BY_ID_REQUEST,
+  payload: { id, callBack },
+});
+
+export const getModelByIdSuccess = (response) => ({
+  type: GET_MODEL_BY_ID_SUCCESS,
+  payload: { response },
+});
+
+export const getModelByIdError = (error) => ({
+  type: GET_MODEL_BY_ID_ERROR,
+  payload: { error },
+});
+
+export const updateModel = (data, id, callBack) => ({
+  type: UPDATE_MODEL_REQUEST,
+  payload: { data, id, callBack },
+});
+
+export const updateModelSuccess = (response) => ({
+  type: UPDATE_MODEL_SUCCESS,
+  payload: response,
+});
+
+export const updateModelError = (error) => ({
+  type: UPDATE_MODEL_ERROR,
   payload: { error },
 });

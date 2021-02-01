@@ -16,12 +16,6 @@ import { injectIntl } from 'react-intl';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 
-import {
-  DataListIcon,
-  ThumbListIcon,
-  ImageListIcon,
-} from '../../components/svg';
-
 const ListPageHeading = ({
   intl,
   displayMode,
@@ -98,11 +92,11 @@ const ListPageHeading = ({
                   className="dropdown-toggle-split btn-lg"
                 />
                 <DropdownMenu right>
-                  <DropdownItem onClick={onDelete}>
+                  <DropdownItem
+                    onClick={onDelete}
+                    disabled={selectedItemsLength === 0}
+                  >
                     <IntlMessages id="pages.delete" />
-                  </DropdownItem>
-                  <DropdownItem>
-                    <IntlMessages id="pages.another-action" />
                   </DropdownItem>
                 </DropdownMenu>
               </ButtonDropdown>
@@ -124,38 +118,6 @@ const ListPageHeading = ({
             className="d-md-block"
             id="displayOptions"
           >
-            {!isAdmin && (
-              <span className="mr-3 d-inline-block float-md-left">
-                <a
-                  href="#/"
-                  className={`mr-2 view-icon ${
-                    displayMode === 'imagelist' ? 'active' : ''
-                  }`}
-                  onClick={() => changeDisplayMode('imagelist')}
-                >
-                  <ImageListIcon />
-                </a>
-                <a
-                  href="#/"
-                  className={`mr-2 view-icon ${
-                    displayMode === 'list' ? 'active' : ''
-                  }`}
-                  onClick={() => changeDisplayMode('list')}
-                >
-                  <DataListIcon />
-                </a>
-                <a
-                  href="#/"
-                  className={`mr-2 view-icon ${
-                    displayMode === 'thumblist' ? 'active' : ''
-                  }`}
-                  onClick={() => changeDisplayMode('thumblist')}
-                >
-                  <ThumbListIcon />
-                </a>
-              </span>
-            )}
-
             <div className="d-block d-md-inline-block pt-1">
               {isOrder && (
                 <UncontrolledDropdown className="mr-1 float-md-left btn-group mb-1">

@@ -13,7 +13,7 @@ import Headroom from 'react-headroom';
 
 import axios from 'axios';
 
-import { baseUrl } from '../../constants/defaultValues';
+import { baseUrl, adminRoot } from '../../constants/defaultValues';
 import { getCurriculumService } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
 import AddNewModal from '../../containers/pages/AddNewModal';
@@ -42,7 +42,7 @@ const categories = [
   { label: 'Desserts', value: 'Desserts', key: 2 },
 ];
 
-const Home = ({ match }) => {
+const Home = ({ match, history }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
@@ -216,6 +216,10 @@ const Home = ({ match }) => {
     return false;
   });
 
+  const toDetailModel = (id) => {
+    history.push(`${adminRoot}/pages/model/details?id=${id}`);
+  };
+
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
 
@@ -379,6 +383,7 @@ const Home = ({ match }) => {
                         onContextMenuClick={onContextMenuClick}
                         onContextMenu={onContextMenu}
                         onChangePage={setCurrentPage}
+                        toDetailModel={toDetailModel}
                       />
                     </div>
                   </>

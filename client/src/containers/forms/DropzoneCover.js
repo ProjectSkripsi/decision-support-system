@@ -13,8 +13,8 @@ const dropzoneComponentConfig = {
 const dropzoneConfig = {
   thumbnailHeight: 160,
   maxFiles: 1,
-  acceptedFiles: 'application/pdf',
-  iconFiletypes: ['.pdf'],
+  iconFiletypes: ['.jpg', '.png', '.gif'],
+  acceptedFiles: 'image/jpeg,image/png,image/gif',
   previewTemplate: ReactDOMServer.renderToStaticMarkup(
     <div className="dz-preview dz-file-preview mb-3">
       <div className="d-flex flex-row ">
@@ -58,7 +58,7 @@ const dropzoneConfig = {
   headers: { 'My-Awesome-Header': 'header value' },
 };
 
-export default class DropzoneExample extends Component {
+export default class DropzoneCover extends Component {
   clear() {
     this.myDropzone.removeAllFiles(true);
   }

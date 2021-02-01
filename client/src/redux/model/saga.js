@@ -4,6 +4,8 @@ import {
   DELETE_MODEL_REQUEST,
   PUBLISH_MODEL_REQUEST,
   UPDATE_CURRICULUM_REQUEST,
+  GET_MODEL_BY_ID_REQUEST,
+  UPDATE_MODEL_REQUEST,
 } from '../actions';
 import {
   sumbitModelSuccess,
@@ -14,12 +16,18 @@ import {
   publishModelError,
   updateCurriculumSuccess,
   updateCurriculumError,
+  getModelByIdSuccess,
+  getModelByIdError,
+  updateModelSuccess,
+  updateModelError,
 } from './actions';
 import {
   sumbitModelService,
   deleteModelService,
   publishModelService,
   updateCurriculumService,
+  getModelByIdService,
+  updateModelService,
 } from './services';
 
 function* submitModelSaga({ payload }) {
@@ -77,6 +85,34 @@ function* updateCurriculumSaga({ payload }) {
   }
 }
 
+function* getModelByIdSaga({ payload }) {
+  const { id } = payload;
+  try {
+    const response = yield call(getModelByIdService, id);
+    const { callBack } = payload;
+    if (callBack) {
+      callBack(response);
+    }
+    yield put(getModelByIdSuccess(response));
+  } catch (error) {
+    yield put(getModelByIdError(error));
+  }
+}
+
+function* updateModelSaga({ payload }) {
+  const { data, id } = payload;
+  try {
+    const response = yield call(updateModelService, data, id);
+    const { callBack } = payload;
+    if (callBack) {
+      callBack(response);
+    }
+    yield put(updateModelSuccess(response));
+  } catch (error) {
+    yield put(updateModelError(error));
+  }
+}
+
 export function* watchSubmitModelSaga() {
   yield takeEvery(SUBMIT_NEW_MODEL_REQUEST, submitModelSaga);
 }
@@ -93,9 +129,19 @@ export function* watchUpdateCurriculumSaga() {
   yield takeEvery(UPDATE_CURRICULUM_REQUEST, updateCurriculumSaga);
 }
 
+export function* watchGetModelByIdSaga() {
+  yield takeEvery(GET_MODEL_BY_ID_REQUEST, getModelByIdSaga);
+}
+
+export function* watchUpdateModelSaga() {
+  yield takeEvery(UPDATE_MODEL_REQUEST, updateModelSaga);
+}
+
 export default function* rootSaga() {
   yield all([fork(watchSubmitModelSaga)]);
   yield all([fork(watchDeleteModelSaga)]);
   yield all([fork(watchPublishModelSaga)]);
   yield all([fork(watchUpdateCurriculumSaga)]);
+  yield all([fork(watchGetModelByIdSaga)]);
+  yield all([fork(watchUpdateModelSaga)]);
 }

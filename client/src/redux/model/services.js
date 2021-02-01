@@ -78,3 +78,26 @@ export const updateCurriculumService = async (title, fileUrl) => {
     return response;
   }
 };
+
+export const getModelByIdService = async (id) => {
+  try {
+    const response = await axios.get(`${baseUrl}/model/${id}`);
+    return response;
+  } catch ({ response }) {
+    return response;
+  }
+};
+
+export const updateModelService = async (data, id) => {
+  const token = getToken();
+  try {
+    const response = await axios.put(`${baseUrl}/model/update/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch ({ response }) {
+    return response;
+  }
+};

@@ -150,6 +150,7 @@ module.exports = {
   'menu.download': 'Download',
   'menu.master-paud': 'Master Paud',
   'menu.master-user': 'Master User',
+  'menu.model': 'Model',
 
   /* 04.Dashboards */
   'dashboards.pending-orders': 'Pending Orders',

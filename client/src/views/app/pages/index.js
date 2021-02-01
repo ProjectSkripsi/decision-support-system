@@ -17,9 +17,9 @@ const Blog = React.lazy(() =>
 const Pages = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/product`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/model`} />
       <Route
-        path={`${match.url}/product`}
+        path={`${match.url}/model`}
         render={(props) => <Product {...props} />}
       />
       <Route

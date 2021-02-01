@@ -20,8 +20,9 @@ const ListPageListing = ({
   onContextMenuClick,
   onContextMenu,
   onChangePage,
-  publishModel,
   isAdmin,
+  toDetailModel,
+  doUpdate,
 }) => {
   return (
     <Row>
@@ -34,8 +35,9 @@ const ListPageListing = ({
               isSelect={selectedItems.includes(product._id)}
               collect={collect}
               onCheckItem={onCheckItem}
-              publishModel={publishModel}
               isAdmin={isAdmin}
+              toDetailModel={toDetailModel}
+              doUpdate={doUpdate}
             />
           );
         }
