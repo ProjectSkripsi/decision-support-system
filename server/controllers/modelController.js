@@ -171,7 +171,7 @@ module.exports = {
       score,
       author,
     } = req.body;
-    console.log(req.body);
+
     try {
       const response = await Model.findByIdAndUpdate(
         {

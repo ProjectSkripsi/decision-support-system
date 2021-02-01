@@ -27,7 +27,8 @@ const DefaultDashboard = ({ intl, match }) => {
 
   return (
     <>
-      <Row>
+      Hello admin!
+      {/* <Row>
         <Colxx xxs="12">
           <Breadcrumb heading="menu.default" match={match} />
           <Separator className="mb-5" />
@@ -124,7 +125,7 @@ const DefaultDashboard = ({ intl, match }) => {
           <SmallLineCharts />
           <TopRatedItems />
         </Colxx>
-      </Row>
+      </Row> */}
     </>
   );
 };

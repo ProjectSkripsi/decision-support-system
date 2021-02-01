@@ -165,7 +165,6 @@ const DataListPages = ({
   };
 
   const onSubmit = (event, errors, values) => {
-    console.log(isUpdate);
     if (
       errors.length === 0 &&
       state.coverUrl !== undefined &&
