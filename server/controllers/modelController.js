@@ -76,7 +76,7 @@ module.exports = {
         ? 0
         : (Number(currentPage) - 1) * Number(pageSize);
 
-    var findCondition = { deleteAt: null, isPublish: true };
+    var findCondition = { deleteAt: null };
     if (search) {
       findCondition = {
         deleteAt: null,
@@ -129,6 +129,28 @@ module.exports = {
         { $set: { deleteAt: Date.now() } },
         { multi: true }
       );
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  getModelById: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const response = await Model.findById({ _id: id });
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  getAnyModel: async (req, res) => {
+    try {
+      const response = await Model.aggregate([
+        { $match: { deleteAt: null } },
+        { $sample: { size: 6 } },
+      ]);
       res.status(200).json(response);
     } catch (error) {
       res.status(500).json(error);

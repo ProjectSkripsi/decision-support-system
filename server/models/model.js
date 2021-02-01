@@ -35,7 +35,11 @@ const modelSchema = new Schema(
     },
     isPublish: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    download: {
+      type: Number,
+      default: 0,
     },
     deleteAt: { type: Date, default: null },
   },
