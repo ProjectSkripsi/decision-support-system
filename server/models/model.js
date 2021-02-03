@@ -30,6 +30,9 @@ const modelSchema = new Schema(
     score: {
       type: String,
     },
+    nasionalismContent: {
+      type: String,
+    },
     author: {
       type: String,
     },

@@ -13,6 +13,7 @@ module.exports = {
       year,
       score,
       author,
+      nasionalismContent,
     } = req.body.data;
     try {
       const response = await Model.create({
@@ -26,6 +27,7 @@ module.exports = {
         year,
         score,
         author,
+        nasionalismContent,
       });
       res.status(201).json(response);
     } catch (error) {
@@ -170,6 +172,7 @@ module.exports = {
       year,
       score,
       author,
+      nasionalismContent,
     } = req.body;
 
     try {
@@ -188,6 +191,7 @@ module.exports = {
           year,
           score,
           author,
+          nasionalismContent,
         },
         {
           returnOriginal: false,

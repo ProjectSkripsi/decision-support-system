@@ -30,6 +30,7 @@ const AddNewModal = ({
   setIsRemoveCover,
   isRemoveFile,
   setIsRemoveFile,
+  setNasionalism,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -134,6 +135,16 @@ const AddNewModal = ({
             className="mb-5"
             step={1}
             onChange={setScore}
+          />
+
+          <Label className="mt-3">Kandungan Konten Nasionalisme</Label>
+          <SliderTooltip
+            min={0}
+            max={100}
+            defaultValue={data.nasionalismContent}
+            className="mb-5"
+            step={1}
+            onChange={setNasionalism}
           />
 
           <AvRadioGroup

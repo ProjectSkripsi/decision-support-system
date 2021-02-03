@@ -68,6 +68,7 @@ const DataListPages = ({
     coverUrl: null,
     fileUrl: null,
     author: '',
+    nasionalismContent: '',
   });
 
   const [isUpdate, setIsUpdate] = useState(false);
@@ -337,6 +338,12 @@ const DataListPages = ({
             setState((prevState) => ({
               ...prevState,
               score: e.toString(),
+            }));
+          }}
+          setNasionalism={(e) => {
+            setState((prevState) => ({
+              ...prevState,
+              nasionalismContent: e.toString(),
             }));
           }}
           onUploadImg={onUploadImg}

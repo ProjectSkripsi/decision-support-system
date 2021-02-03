@@ -143,6 +143,7 @@ const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
                     <Row>
                       <Colxx sm="12">
                         <CardBody>
+                          <h3 className="mb-5">{data.title}</h3>
                           <p style={{ textAlign: 'justify' }}>
                             {data.description}
                           </p>
@@ -207,6 +208,16 @@ const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
                           <h5>
                             <p className="list-item-heading mb-1">
                               {data.score}
+                            </p>
+                          </h5>
+                        </div>
+                      </div>
+                      <div className="d-flex flex-row align-items-center ">
+                        <h5>Kandungan Konten Nasionalisme:</h5>
+                        <div className="pl-3 pt-2 pr-2 pb-2">
+                          <h5>
+                            <p className="list-item-heading mb-1">
+                              {data.nasionalismContent}
                             </p>
                           </h5>
                         </div>
