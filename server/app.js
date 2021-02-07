@@ -33,7 +33,7 @@ db.once("open", function () {
 });
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 20000, // limit each IP to 150 requests per windowMs
+  max: 150, // limit each IP to 150 requests per windowMs
 });
 app.use(cors());
 app.use(limiter);
