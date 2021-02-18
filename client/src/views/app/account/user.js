@@ -15,26 +15,28 @@ import {
 } from 'reactstrap';
 import {
   AvForm,
+  AvField,
   AvGroup,
   AvInput,
   AvFeedback,
+  AvRadioGroup,
+  AvRadio,
+  AvCheckboxGroup,
+  AvCheckbox,
 } from 'availity-reactstrap-validation';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
-import GalleryProfile from '../../../containers/pages/GalleryProfile';
 import Breadcrumb from '../../../containers/navs/Breadcrumb';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import IntlMessages from '../../../helpers/IntlMessages';
 import SingleLightbox from '../../../components/pages/SingleLightbox';
 import whotoFollowData from '../../../data/follow';
-import UserCardBasic from '../../../components/cards/UserCardBasic';
 import UploadZone from './UploadZone';
 import { NotificationManager } from '../../../components/common/react-notifications';
 import { getToken } from '../../../helpers/Utils';
 import { baseUrl } from '../../../constants/defaultValues';
-import { setCurrentUser } from '../../../helpers/Utils';
 import { updateProfile } from '../../../redux/actions';
 
 const friendsData = whotoFollowData.slice();
@@ -44,6 +46,10 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
   const dropzone = useRef();
   const [activeTab, setActiveTab] = useState('profile');
   const [user, setUser] = useState({});
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [retypePassword, setRetypePassword] = useState('');
+  const [notMacth, setNotMatch] = useState(false);
 
   useEffect(() => {
     const token = getToken();
@@ -83,8 +89,8 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
         break;
       case 'error':
         NotificationManager.error(
+          msg || 'Silahkan lengkapi data',
           'Terjadi Kesalahan!',
-          'Silahkan lengkapi data',
           3000,
           null,
           null,
@@ -105,6 +111,53 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
   const onUpload = (file) => {
     const img = JSON.parse(file.xhr.response);
     setUser((prevState) => ({ ...prevState, avatarUrl: img.fileUrl }));
+  };
+
+  const onChangePass = (e) => {
+    const { value } = e.target;
+    setOldPassword(value);
+  };
+
+  const retypePass = (e) => {
+    setNotMatch(false);
+    const { value } = e.target;
+    setRetypePassword(value);
+  };
+
+  const onPassword = async () => {
+    const token = getToken();
+    if (newPassword !== retypePassword) {
+      setNotMatch(true);
+    } else {
+      axios
+        .patch(
+          `${baseUrl}/user/change-password`,
+          {
+            recentPassword: oldPassword,
+            newPassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          return res;
+        })
+        .then((data) => {
+          if (data.status === 200) {
+            setOldPassword('');
+            setNewPassword('');
+            setRetypePassword('');
+            setNotMatch(false);
+            createNotification('success', 'Berhasil mengganti password');
+          }
+        })
+        .catch((error) => {
+          createNotification('error', 'Password lama tidak sesuai');
+        });
+    }
   };
 
   return (
@@ -252,23 +305,57 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
               </Row>
             </TabPane>
             <TabPane tabId="changePassword">
-              <GalleryProfile />
-            </TabPane>
-            <TabPane tabId="friends">
-              <Row>
-                {friendsData.map((itemData) => {
-                  return (
-                    <Colxx
-                      xxs="12"
-                      md="6"
-                      lg="4"
-                      key={`friend_${itemData.key}`}
-                    >
-                      <UserCardBasic data={itemData} />
-                    </Colxx>
-                  );
-                })}
-              </Row>
+              <Card className="mb-5">
+                <CardBody>
+                  <h6 className="mb-4">Ganti Password</h6>
+                  <AvForm
+                    className="av-tooltip tooltip-label-right"
+                    onSubmit={(event, errors, values) =>
+                      onPassword(event, errors, values)
+                    }
+                  >
+                    <AvGroup>
+                      <Label>Password Lama</Label>
+                      <AvInput
+                        name="oldPassword"
+                        required
+                        onChange={onChangePass}
+                        type="password"
+                      />
+                      <AvFeedback>Password lama wajib diisi!</AvFeedback>
+                    </AvGroup>
+                    <hr />
+                    <AvGroup>
+                      <Label>Password Baru</Label>
+                      <AvInput
+                        name="newPassword"
+                        required
+                        type="password"
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
+                      <AvFeedback>Password baru wajib diisi!</AvFeedback>
+                    </AvGroup>
+
+                    <AvGroup>
+                      <Label>Ulangi Password</Label>
+                      <AvInput
+                        name="retypePassword"
+                        required
+                        type="password"
+                        onChange={retypePass}
+                      />
+                      <AvFeedback>Ulangi Password wajib diisi!</AvFeedback>
+                      {notMacth && (
+                        <span style={{ color: 'red' }}>
+                          Password tidak sama
+                        </span>
+                      )}
+                    </AvGroup>
+
+                    <Button color="primary">Submit</Button>
+                  </AvForm>
+                </CardBody>
+              </Card>
             </TabPane>
           </TabContent>
         </Colxx>
