@@ -6,6 +6,7 @@ import {
   LOGOUT_USER,
   FORGOT_PASSWORD,
   RESET_PASSWORD,
+  UPDATE_USER_REQUEST,
 } from '../actions';
 
 import {
@@ -17,11 +18,13 @@ import {
   forgotPasswordError,
   resetPasswordSuccess,
   resetPasswordError,
+  updateProfileSuccess,
+  updateProfileError,
 } from './actions';
 
 import { adminRoot, currentUser } from '../../constants/defaultValues';
 import { setCurrentUser } from '../../helpers/Utils';
-import { userLoginService } from './services';
+import { userLoginService, updateProfileService } from './services';
 
 export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
@@ -41,7 +44,7 @@ function* loginWithEmailPassword({ payload }) {
     console.log(loginUser);
     if (loginUser.status === 200) {
       const item = { uid: loginUser.data._id, ...loginUser.data };
-      console.log(`item==>>`, item);
+
       setCurrentUser(item);
       yield put(loginUserSuccess(item));
       history.push(adminRoot);
@@ -158,6 +161,28 @@ function* resetPassword({ payload }) {
   }
 }
 
+function* updateProfileSaga({ payload }) {
+  const { data, callBack } = payload;
+
+  try {
+    const response = yield call(updateProfileService, { data });
+    if (response.status === 200) {
+      const item = { uid: response.data._id, ...response.data };
+      setCurrentUser(item);
+      callBack(response);
+      yield put(updateProfileSuccess(item));
+    } else {
+      yield put(updateProfileError(response.message));
+    }
+  } catch (error) {
+    yield put(updateProfileError(error));
+  }
+}
+
+export function* watchUpdateProfile() {
+  yield takeEvery(UPDATE_USER_REQUEST, updateProfileSaga);
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchLoginUser),
@@ -165,5 +190,6 @@ export default function* rootSaga() {
     fork(watchRegisterUser),
     fork(watchForgotPassword),
     fork(watchResetPassword),
+    fork(watchUpdateProfile),
   ]);
 }

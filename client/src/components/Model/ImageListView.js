@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Row,
   Card,
@@ -8,10 +8,12 @@ import {
   CardText,
   CustomInput,
   Button,
+  Tooltip,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import { Colxx } from '../../components/common/CustomBootstrap';
+// import TooltipItem from '../../components/common/TooltipItem';
 
 const ImageListView = ({
   product,
@@ -21,7 +23,11 @@ const ImageListView = ({
   isAdmin,
   toDetailModel,
   doUpdate,
+  onDownloadModel,
 }) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const toggle = () => setTooltipOpen(!tooltipOpen);
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={product._id}>
       <Card
@@ -43,7 +49,7 @@ const ImageListView = ({
         <CardBody>
           <Row>
             {isAdmin && (
-              <Colxx xxs="2">
+              <Colxx xxs="1" style={{ paddingLeft: '5px' }}>
                 <CustomInput
                   className="item-check mb-0"
                   type="checkbox"
@@ -55,7 +61,19 @@ const ImageListView = ({
               </Colxx>
             )}
             <Colxx xxs="10" className="mb-3">
-              <CardSubtitle>{product.title}</CardSubtitle>
+              <CardSubtitle className="text ellipsis">
+                <div className="text-concat" id={'Tooltip-' + product._id}>
+                  {product.title}
+                </div>
+                <Tooltip
+                  placement="top"
+                  isOpen={tooltipOpen}
+                  target={'Tooltip-' + product._id}
+                  toggle={toggle}
+                >
+                  {product.title}
+                </Tooltip>
+              </CardSubtitle>
               <CardText className="text-muted text-small mb-0 font-weight-light">
                 {product.year}
               </CardText>
@@ -80,6 +98,15 @@ const ImageListView = ({
             >
               LIHAT DETAIL
             </Button>
+            {!isAdmin && (
+              <Button
+                color="primary"
+                block
+                onClick={() => onDownloadModel(product)}
+              >
+                DOWNLOAD
+              </Button>
+            )}
           </Row>
         </CardBody>
       </Card>

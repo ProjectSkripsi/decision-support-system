@@ -14,6 +14,9 @@ const userSchema = new Schema(
       type: String,
       default: "admin",
     },
+    name: {
+      type: String,
+    },
     avatarUrl: {
       type: String,
     },
@@ -24,6 +27,9 @@ const userSchema = new Schema(
     deleteAt: {
       type: Date,
       default: null,
+    },
+    bio: {
+      type: String,
     },
   },
   {

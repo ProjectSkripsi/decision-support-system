@@ -20,7 +20,7 @@ const BlankPage = React.lazy(() =>
   import(/* webpackChunkName: "blank-page" */ './blank-page')
 );
 const MasterUser = React.lazy(() =>
-  import(/* webpackChunkName: "applications" */ './user')
+  import(/* webpackChunkName: "applications" */ './account/user')
 );
 
 const MasterPaud = React.lazy(() =>
@@ -68,7 +68,7 @@ const App = ({ match }) => {
               render={(props) => <BlankPage {...props} />}
             />
             <Route
-              path={`${match.url}/master-user`}
+              path={`${match.url}/account-setting`}
               render={(props) => <MasterUser {...props} />}
             />
             <Route

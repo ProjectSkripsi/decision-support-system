@@ -10,13 +10,14 @@ import classnames from 'classnames';
 import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
-
 import axios from 'axios';
-
 import { baseUrl, adminRoot } from '../../constants/defaultValues';
-import { getCurriculumService } from '../../redux/model/services';
+import {
+  getCurriculumService,
+  onDownloadService,
+} from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
-import AddNewModal from '../../containers/pages/AddNewModal';
+
 import ListPageListing from '../../components/Model/ListPageListing';
 import useMousetrap from '../../hooks/use-mousetrap';
 
@@ -223,6 +224,11 @@ const Home = ({ match, history }) => {
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
 
+  const onDownloadModel = async (data) => {
+    saveAs(data.fileUrl, `${data.title}.pdf`);
+    const downloaded = await onDownloadService(data._id);
+  };
+
   return (
     <div
       className={classnames('landing-page', {
@@ -368,11 +374,7 @@ const Home = ({ match, history }) => {
                         pageSizes={pageSizes}
                         toggleModal={() => setModalOpen(!modalOpen)}
                       />
-                      <AddNewModal
-                        modalOpen={modalOpen}
-                        toggleModal={() => setModalOpen(!modalOpen)}
-                        categories={categories}
-                      />
+
                       <ListPageListing
                         items={items}
                         displayMode={displayMode}
@@ -384,6 +386,7 @@ const Home = ({ match, history }) => {
                         onContextMenu={onContextMenu}
                         onChangePage={setCurrentPage}
                         toDetailModel={toDetailModel}
+                        onDownloadModel={onDownloadModel}
                       />
                     </div>
                   </>

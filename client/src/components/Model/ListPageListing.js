@@ -23,6 +23,7 @@ const ListPageListing = ({
   isAdmin,
   toDetailModel,
   doUpdate,
+  onDownloadModel,
 }) => {
   return (
     <Row>
@@ -38,6 +39,7 @@ const ListPageListing = ({
               isAdmin={isAdmin}
               toDetailModel={toDetailModel}
               doUpdate={doUpdate}
+              onDownloadModel={onDownloadModel}
             />
           );
         }

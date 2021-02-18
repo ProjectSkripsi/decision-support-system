@@ -202,4 +202,26 @@ module.exports = {
       res.status(500).json(error);
     }
   },
+
+  onDownload: async (req, res) => {
+    try {
+      const response = await Model.findByIdAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $inc: {
+            download: 1,
+          },
+        },
+        {
+          returnOriginal: false,
+        }
+      );
+      console.log(response.download);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };

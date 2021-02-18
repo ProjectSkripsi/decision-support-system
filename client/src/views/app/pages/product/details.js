@@ -7,18 +7,9 @@ import {
   CardBody,
   Nav,
   NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
   TabContent,
   TabPane,
-  Badge,
   CardHeader,
-  Table,
-  InputGroup,
-  InputGroupAddon,
-  Input,
   Button,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
@@ -30,12 +21,11 @@ import {
   Separator,
   Colxx,
 } from '../../../../components/common/CustomBootstrap';
-import IntlMessages from '../../../../helpers/IntlMessages';
 import GlideComponentThumbs from '../../../../components/carousel/GlideComponentThumbs';
 import { saveAs } from 'file-saver';
-import GalleryDetail from '../../../../containers/pages/GalleryDetail';
 import { getModelById } from '../../../../redux/actions';
 import axios from 'axios';
+import { onDownloadService } from '../../../../redux/model/services';
 
 const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
   const [activeTab, setActiveTab] = useState('details');
@@ -47,6 +37,7 @@ const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
     const id = params.get('id'); // bar
 
     getModelByIdAction(id, (callBack) => {
+      console.log('first', callBack.data);
       setData(callBack.data);
     });
   }, []);
@@ -65,11 +56,12 @@ const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
     fetchData();
   }, []);
 
-  const onDownload = () => {
+  const onDownload = async () => {
     saveAs(data.fileUrl, `${data.title}.pdf`);
+    const downloaded = await onDownloadService(data._id);
+    setData(downloaded.data);
   };
 
-  const { messages } = intl;
   return (
     <>
       <Row>

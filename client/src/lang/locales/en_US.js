@@ -149,8 +149,9 @@ module.exports = {
   'menu.wizard': 'Wizard',
   'menu.download': 'Download',
   'menu.master-paud': 'Master Paud',
-  'menu.master-user': 'Master User',
+  'menu.master-user': 'Pengaturan Akun',
   'menu.model': 'Model',
+  'menu.account-setting': 'Pengaturan Akun',
 
   /* 04.Dashboards */
   'dashboards.pending-orders': 'Pending Orders',

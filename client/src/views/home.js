@@ -6,6 +6,11 @@ import {
   DropdownItem,
   DropdownMenu,
   UncontrolledDropdown,
+  Card,
+  CardBody,
+  ModalHeader,
+  ModalBody,
+  Modal,
 } from 'reactstrap';
 import classnames from 'classnames';
 import GlideComponent from '../components/carousel/GlideComponent';
@@ -13,6 +18,9 @@ import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
 import { getCurriculumService } from '../redux/model/services';
+import VideoPlayer from '../components/common/VideoPlayer';
+import ModalVideo from 'react-modal-video';
+import ReactPlayer from 'react-player/youtube';
 
 const slideSettings = {
   type: 'carousel',
@@ -21,93 +29,37 @@ const slideSettings = {
   hideNav: true,
   peek: { before: 10, after: 10 },
   breakpoints: {
-    '600': { perView: 1 },
-    '992': { perView: 2 },
-    '1200': { perView: 3 },
+    600: { perView: 1 },
+    992: { perView: 2 },
+    1200: { perView: 3 },
   },
 };
 
 const slideItems = [
   {
-    icon: 'iconsminds-mouse-3',
+    icon: 'simple-icon-control-play',
     title: 'Right Click Menu',
-    detail:
-      'Increases overall usability of the project by providing additional actions menu.',
+    detail: 'Peduli korban bencana gempa bumi Sulbar',
+    videoId: 'ZPyLZzszFTU',
   },
   {
-    icon: 'iconsminds-electric-guitar',
+    icon: 'simple-icon-control-play',
     title: 'Video Player',
-    detail:
-      'Carefully themed multimedia players powered by Video.js library with Youtube support.',
+    detail: 'Peresmian Kelas Darurat PAUD korban banjir bandang diMasamba',
+    videoId: '4QYghCK2xes',
   },
   {
     icon: 'iconsminds-keyboard',
     title: 'Keyboard Shortcuts',
     detail:
-      'Easily configurable keyboard shortcuts plugin that highly improves user experience.',
+      'BP PAUD dan Dikmas Sulawesi Selatan menyerahkan bantuan kepada korban banjir di Nipa-Nipa Antang',
+    videoId: 'MlJtkmE5Sto',
   },
   {
     icon: 'iconsminds-three-arrow-fork ',
     title: 'Two Panels Menu',
-    detail:
-      'Three states two panels icon menu that looks good, auto resizes and does the job well.',
-  },
-  {
-    icon: 'iconsminds-deer',
-    title: 'Icons Mind',
-    detail:
-      '1040 icons in 53 different categories, designed pixel perfect and ready for your project.',
-  },
-  {
-    icon: 'iconsminds-palette',
-    title: '20 Color Schemes',
-    detail:
-      'Colors, icons and design harmony that creates excellent themes to cover entire project.',
-  },
-  {
-    icon: 'iconsminds-air-balloon-1',
-    title: '3 Applications',
-    detail:
-      'Applications that mostly made of components are the way to get started to create something similar.',
-  },
-  {
-    icon: 'iconsminds-resize',
-    title: 'Extra Responsive',
-    detail:
-      'Custom Bootstrap 4 xxs & xxl classes delivers better experiences for smaller and larger screens.',
-  },
-];
-
-const features = [
-  {
-    title: 'Pleasant Design',
-    img: '/assets/img/landing-page/features/plesant-design.png',
-    detail:
-      'As a web developer we enjoy to work on something looks nice. It is not an absolute necessity but it really motivates us that final product will look good for user point of view. <br /><br />So we put a lot of work into colors, icons, composition and design harmony. Themed components and layouts with same design language. <br /><br />We kept user experience principles always at the heart of the design process.',
-  },
-  {
-    title: 'Extra Responsive',
-    img: '/assets/img/landing-page/features/extra-responsive.png',
-    detail:
-      'Xxs breakpoint is for smaller screens that has a resolution lower than 420px. Xs works between 576px and 420px. Xxl breakpoint is for larger screens that has a resolution higher than 1440px. Xl works between 1200px and 1440px.<br><br>With this approach we were able to create better experiences for smaller and larger screens.',
-  },
-  {
-    title: 'Superfine Charts',
-    img: '/assets/img/landing-page/features/superfine-charts.png',
-    detail:
-      'Using charts is a good way to visualize data but they often look ugly and break the rhythm of design. <br /><br />We concentrated on a single chart library and tried to create charts that look good with color, opacity, border and shadow. <br /><br />Used certain plugins and created some to make charts even more useful and beautiful.',
-  },
-  {
-    title: 'Layouts for the Job',
-    img: '/assets/img/landing-page/features/layouts-for-the-job.png',
-    detail:
-      'Layouts are the real thing, they need to be accurate and right for the job. They should be functional for both user and developer. <br /><br />We created lots of different layouts for different jobs.<br /><br />Listing pages with view mode changing capabilities, shift select and select all functionality, application layouts with an additional menu, authentication and error layouts which has a different design than the other pages were our main focus. We also created details page with tabs that can hold many components.',
-  },
-  {
-    title: 'Smart Menu',
-    img: '/assets/img/landing-page/features/smart-menu.png',
-    detail:
-      'Instead of good old single panel menus with accordion structure that looks over complicated, we created 2 panels and categorized pages accordingly.<br><br>The default menu auto hides sub panel when resolution is under some breakpoint to open some space. You may also hide menu completely or use only main panel open only.',
+    detail: 'BIMTEK Pendidik dan Tenaga Kependidikan PAUD Angkatan III',
+    videoId: 'rrSGzvn0-eo',
   },
 ];
 
@@ -117,6 +69,7 @@ const Home = () => {
   const refRowHome = useRef(null);
   const refSectionHome = useRef(null);
   const refSectionFooter = useRef(null);
+  const [modalLarge, setModalLarge] = useState(false);
 
   useEffect(() => {
     window.addEventListener('scroll', onWindowScroll);
@@ -173,6 +126,17 @@ const Home = () => {
 
   const onDownload = () => {
     saveAs(data.fileUrl, `${data.title}.pdf`);
+  };
+
+  const [open, setOpen] = useState({
+    isOpen: false,
+  });
+
+  const openModal = (e) => {
+    e.preventDefault();
+    setOpen({
+      isOpen: true,
+    });
   };
 
   return (
@@ -320,7 +284,6 @@ const Home = () => {
                       Balai Pengembangan Pendidikan Anak Usia Dini dan
                       Pendidikan Masyarakat Sulawesi Selatan. <br />
                       <br />
-                      Hope you enjoy it!
                     </p>
                   </div>
                 </div>
@@ -336,101 +299,35 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="row">
+              <div className="row mb-2">
                 <div className="col-12 p-0">
+                  <h2 style={{ color: 'black' }}>GALERI VIDEO</h2>
+                  <hr />
                   <div className="home-carousel">
                     <GlideComponent settings={slideSettings}>
                       {slideItems.map((f, index) => (
-                        <div key={`slide_${index}`} className="card">
-                          <div className="card-body text-center">
-                            <div>
-                              <i className={f.icon + ' large-icon'}></i>
-                              <h5 className="mb-3 font-weight-semibold">
-                                {f.title}
-                              </h5>
-                            </div>
-                            <div>
-                              <p className="detail-text">{f.detail}</p>
-                            </div>
-                          </div>
-                        </div>
+                        <Card className="mb-4 mr-3" key={`slide_${index}`}>
+                          <CardBody className="p-0">
+                            <ReactPlayer
+                              url={`https://www.youtube.com/watch?v=${f.videoId}`}
+                              config={{
+                                youtube: {
+                                  playerVars: { showinfo: 1 },
+                                },
+                              }}
+                              height="200px"
+                              width="100%"
+                            />
+                          </CardBody>
+                          <CardBody>
+                            <p className="list-item-heading mb-4">{f.detail}</p>
+                          </CardBody>
+                        </Card>
                       ))}
                     </GlideComponent>
                   </div>
                 </div>
               </div>
-
-              <div className="row">
-                <a
-                  className="btn btn-circle btn-outline-semi-light hero-circle-button"
-                  href="#scroll"
-                  onClick={(event) => scrollTo(event, 'features')}
-                >
-                  <i className="simple-icon-arrow-down"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="section">
-            <div className="container" id="features">
-              <div className="row">
-                <div className="col-12 offset-0 col-lg-8 offset-lg-2 text-center">
-                  <h1>Features At a Glance</h1>
-                  <p>
-                    We tried to create an admin theme that we would like to use
-                    ourselves so we listed our priorities. We would like to have
-                    a theme that is not over complicated to use, does the job
-                    well, contains must have omponents and looks really nice.
-                  </p>
-                </div>
-              </div>
-              {features.map((feature, i) => (
-                <div key={`feature_${i}`}>
-                  {i % 2 === 0 && (
-                    <div className="row feature-row">
-                      <div className="col-12 col-md-6 col-lg-5 d-flex align-items-center">
-                        <div className="feature-text-container">
-                          <h2>{feature.title}</h2>
-                          <p
-                            dangerouslySetInnerHTML={{
-                              __html: feature.detail,
-                            }}
-                          ></p>
-                        </div>
-                      </div>
-                      <div className="col-12 col-md-6 col-lg-6 offset-lg-1 offset-md-0 position-relative">
-                        <img
-                          alt={feature.title}
-                          src={feature.img}
-                          className="feature-image-right feature-image-charts position-relative"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {/* {i % 2 === 1 && (
-                    <div className="row feature-row">
-                      <div className="col-12 col-md-6 col-lg-6 order-2 order-md-1">
-                        <img
-                          alt={feature.title}
-                          src={feature.img}
-                          className="feature-image-left feature-image-charts"
-                        />
-                      </div>
-                      <div className="col-12 col-md-6 offset-md-0 col-lg-5 offset-lg-1 d-flex align-items-center order-1 order-md-2">
-                        <div className="feature-text-container">
-                          <h2>{feature.title}</h2>
-                          <p
-                            dangerouslySetInnerHTML={{
-                              __html: feature.detail,
-                            }}
-                          ></p>
-                        </div>
-                      </div>
-                    </div>
-                  )} */}
-                </div>
-              ))}
             </div>
           </div>
 

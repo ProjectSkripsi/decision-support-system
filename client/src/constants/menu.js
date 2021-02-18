@@ -378,23 +378,23 @@ const data = [
   //   ],
   // },
 
-  {
-    id: 'user',
-    icon: 'simple-icon-user',
-    label: 'menu.master-user',
-    to: `${adminRoot}/master-user`,
-  },
-  {
-    id: 'paud',
-    icon: 'simple-icon-graduation',
-    label: 'menu.master-paud',
-    to: `${adminRoot}/master-paud`,
-  },
+  // {
+  //   id: 'paud',
+  //   icon: 'simple-icon-graduation',
+  //   label: 'menu.master-paud',
+  //   to: `${adminRoot}/master-paud`,
+  // },
   {
     id: 'blankpage',
     icon: 'simple-icon-book-open',
     label: 'menu.blank-page',
     to: `${adminRoot}/blank-page`,
+  },
+  {
+    id: 'user',
+    icon: 'simple-icon-user',
+    label: 'menu.master-user',
+    to: `${adminRoot}/account-setting`,
   },
   // {
   //   id: 'docs',

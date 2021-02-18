@@ -12,6 +12,9 @@ import {
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from '../actions';
 
 const INIT_STATE = {
@@ -27,7 +30,15 @@ const INIT_STATE = {
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case LOGIN_USER:
+    case UPDATE_USER_REQUEST:
       return { ...state, loading: true, error: '' };
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentUser: action.payload,
+        error: '',
+      };
     case LOGIN_USER_SUCCESS:
       return {
         ...state,
@@ -54,6 +65,7 @@ export default (state = INIT_STATE, action) => {
         error: '',
       };
     case FORGOT_PASSWORD_ERROR:
+    case UPDATE_USER_ERROR:
       return {
         ...state,
         loading: false,

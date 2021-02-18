@@ -12,6 +12,9 @@ import {
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from '../actions';
 
 export const loginUser = (user, history) => ({
@@ -69,4 +72,19 @@ export const registerUserError = (message) => ({
 export const logoutUser = (history) => ({
   type: LOGOUT_USER,
   payload: { history },
+});
+
+export const updateProfile = (data, callBack) => ({
+  type: UPDATE_USER_REQUEST,
+  payload: { data, callBack },
+});
+
+export const updateProfileSuccess = (user) => ({
+  type: UPDATE_USER_SUCCESS,
+  payload: user,
+});
+
+export const updateProfileError = (message) => ({
+  type: UPDATE_USER_ERROR,
+  payload: { message },
 });

@@ -39,7 +39,6 @@ module.exports = {
   },
 
   login: (req, res) => {
-    console.log(`masuk`);
     const { email, password } = req.body;
     User.findOne({
       email,
@@ -52,10 +51,11 @@ module.exports = {
               res.status(200).json({
                 err: false,
                 msg: `Succesfully Login`,
-
+                name: result.name,
                 email: result.email,
                 role: result.role,
                 avatarUrl: result.avatarUrl,
+                bio: result.bio,
                 _id: result._id,
                 token: jwtEncode({
                   id: result._id,
@@ -82,5 +82,54 @@ module.exports = {
           msg: `email not register`,
         });
       });
+  },
+
+  getUserById: async (req, res) => {
+    const { id } = req.decoded;
+    try {
+      const response = await User.findById({
+        _id: id,
+      }).select("-password");
+
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  updateProfile: async (req, res) => {
+    const { id } = req.decoded;
+    const { email, name, bio, avatarUrl } = req.body.data;
+    try {
+      const response = await User.findOneAndUpdate(
+        {
+          _id: id,
+        },
+        {
+          email,
+          name,
+          bio,
+          avatarUrl,
+        },
+        {
+          returnOriginal: false,
+        }
+      );
+      res.status(200).json({
+        name: response.name,
+        email: response.email,
+        role: response.role,
+        avatarUrl: response.avatarUrl,
+        bio: response.bio,
+        _id: response._id,
+        token: jwtEncode({
+          id: response._id,
+          email: response.email,
+          role: response.role,
+        }),
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
   },
 };

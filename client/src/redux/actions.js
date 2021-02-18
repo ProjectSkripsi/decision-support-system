@@ -96,6 +96,10 @@ export const UPDATE_MODEL_REQUEST = 'UPDATE_MODEL_REQUEST';
 export const UPDATE_MODEL_SUCCESS = 'UPDATE_MODEL_SUCCESS';
 export const UPDATE_MODEL_ERROR = 'UPDATE_MODEL_ERROR';
 
+export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
+export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
+export const UPDATE_USER_ERROR = 'UPDATE_USER_ERROR';
+
 export * from './menu/actions';
 export * from './settings/actions';
 export * from './auth/actions';

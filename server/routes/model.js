@@ -9,6 +9,7 @@ const {
   getModelById,
   getAnyModel,
   updateModel,
+  onDownload,
 } = require("../controllers/modelController");
 
 const { isLogin, isAdmin } = require("../middlewares/auth");
@@ -21,5 +22,6 @@ router.patch("/publish/:id/:type", isLogin, isAdmin, publishModel);
 router.put("/update/:id", isLogin, isAdmin, updateModel);
 router.get("/any-model", getAnyModel);
 router.get("/:id", getModelById);
+router.patch("/:id", onDownload);
 
 module.exports = router;

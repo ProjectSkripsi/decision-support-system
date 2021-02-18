@@ -101,3 +101,12 @@ export const updateModelService = async (data, id) => {
     return response;
   }
 };
+
+export const onDownloadService = async (id) => {
+  try {
+    const response = await axios.patch(`${baseUrl}/model/${id}`);
+    return response;
+  } catch ({ response }) {
+    return response;
+  }
+};
