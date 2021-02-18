@@ -132,4 +132,56 @@ module.exports = {
       res.status(500).json(error);
     }
   },
+
+  changePassword: (req, res) => {
+    const { recentPassword, newPassword } = req.body;
+    const { id } = req.decoded;
+    User.findOne({
+      _id: id,
+    })
+      .then((result) => {
+        bcrypt
+          .compare(recentPassword, result.password)
+          .then((match) => {
+            if (match) {
+              User.findByIdAndUpdate(
+                {
+                  _id: id,
+                },
+                {
+                  password: encode(newPassword),
+                }
+              )
+                .then((response) => {
+                  res.status(200).json({
+                    msg: "Succesfully update password",
+                  });
+                })
+                .catch((error) => {
+                  res.status(500).json({
+                    msg: "Server error",
+                    error,
+                  });
+                });
+            } else {
+              res.status(400).json({
+                name: result.name,
+                message: "Password not match, Please try again",
+              });
+            }
+          })
+          .catch((err) => {
+            res.status(500).json({
+              msg: "Something-wrong",
+              error,
+            });
+          });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          msg: "User not-found",
+          error,
+        });
+      });
+  },
 };

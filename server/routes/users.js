@@ -5,6 +5,7 @@ const {
   login,
   getUserById,
   updateProfile,
+  changePassword,
 } = require("../controllers/userController");
 const { isLogin } = require("../middlewares/auth");
 
@@ -15,6 +16,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/profile", isLogin, getUserById);
 router.put("/profile", isLogin, updateProfile);
+router.patch("/change-password", isLogin, changePassword);
 router.post("/register", register);
 router.post("/login", login);
 
