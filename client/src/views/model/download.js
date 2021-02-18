@@ -17,7 +17,7 @@ import {
   onDownloadService,
 } from '../../redux/model/services';
 import ListPageHeading from '../../containers/pages/ListPageHeading';
-
+import ModalDetail from './detail';
 import ListPageListing from '../../components/Model/ListPageListing';
 import useMousetrap from '../../hooks/use-mousetrap';
 
@@ -64,6 +64,8 @@ const Home = ({ match, history }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
+  const [isOpenModel, setIsOpen] = useState(false);
+  const [selectedDetail, setSelectedDetail] = useState({});
 
   useEffect(() => {
     window.addEventListener('scroll', onWindowScroll);
@@ -218,7 +220,10 @@ const Home = ({ match, history }) => {
   });
 
   const toDetailModel = (id) => {
-    history.push(`${adminRoot}/pages/model/details?id=${id}`);
+    const data = items.find((item) => item._id === id);
+    setSelectedDetail(data);
+    setIsOpen(true);
+    // history.push(`${adminRoot}/pages/model/details?id=${id}`);
   };
 
   const startIndex = (currentPage - 1) * selectedPageSize;
@@ -235,6 +240,15 @@ const Home = ({ match, history }) => {
         'show-mobile-menu': showMobileMenu,
       })}
     >
+      <ModalDetail
+        isOpen={isOpenModel}
+        setIsOpen={() => {
+          setIsOpen(false);
+          setSelectedDetail({});
+        }}
+        data={selectedDetail}
+        onDownload={onDownloadModel}
+      />
       <div className="mobile-menu" onClick={(event) => event.stopPropagation()}>
         <img
           style={{ cursor: 'pointer' }}
