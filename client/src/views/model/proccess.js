@@ -94,12 +94,12 @@ const ModalProccess = ({
                       <td>0</td>
                     </tr>
                     <tr>
-                      <th scope="row">1</th>
+                      <th scope="row">2</th>
                       <td>Kurang</td>
                       <td>50</td>
                     </tr>
                     <tr>
-                      <th scope="row">1</th>
+                      <th scope="row">3</th>
                       <td>Cukup</td>
                       <td>100</td>
                     </tr>
