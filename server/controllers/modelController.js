@@ -266,7 +266,15 @@ module.exports = {
 
         let a = [];
         temp.forEach((item, i) => {
-          a[i] = [item.v1, item.v2, item.v3, item.v4, item.v5, item._id];
+          a[i] = [
+            item.v1,
+            item.v2,
+            item.v3,
+            item.v4,
+            item.v5,
+            item.title,
+            item._id,
+          ];
         });
 
         let tV1 = 0;
@@ -382,9 +390,6 @@ module.exports = {
                 minMax[index].min = val5;
               }
             }
-            // else if (index === 5) {
-            //   c.push(a);
-            // }
           });
           b[i] = c;
         });
@@ -442,7 +447,7 @@ module.exports = {
             topsis: topsis[i],
           });
         }
-        newTemp.sort((a, b) => (a.topsis.topsis < b.topsis.topsis ? 1 : -1));
+        // newTemp.sort((a, b) => (a.topsis.topsis < b.topsis.topsis ? 1 : -1));
 
         const count = await Model.countDocuments(findCondition);
         res.status(200).json({
@@ -452,6 +457,10 @@ module.exports = {
           status: true,
           totalItem: count,
           totalPage: Math.ceil(count / Number(pageSize)),
+          valueDivisor: a,
+          extractValue: b,
+          minMaxVal: minMax,
+          valTotalDivisor: [totalV1, totalV2, totalV3, totalV4, totalV5],
         });
       } catch (error) {
         res.status(500).json(error);

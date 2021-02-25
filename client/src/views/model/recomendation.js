@@ -18,8 +18,13 @@ import {
 } from '../../redux/model/services';
 import RecomedationList from '../../containers/pages/RecomendationList';
 import ModalDetail from './detail';
+// import ModalProccess from './proccess';
 import ListPageListing from '../../components/Model/ListPageListing';
 import useMousetrap from '../../hooks/use-mousetrap';
+
+const ModalProccess = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './proccess')
+);
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -67,6 +72,8 @@ const Home = ({ match, history }) => {
   const [lastChecked, setLastChecked] = useState(null);
   const [isOpenModel, setIsOpen] = useState(false);
   const [selectedDetail, setSelectedDetail] = useState({});
+  const [isOpenProccess, setIsOpenProccess] = useState(false);
+  const [proccesData, setProccesData] = useState({});
 
   useEffect(() => {
     window.addEventListener('scroll', onWindowScroll);
@@ -141,8 +148,13 @@ const Home = ({ match, history }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          setItems(data.data);
+          setItems(
+            data.data.sort((a, b) =>
+              a.topsis.topsis < b.topsis.topsis ? 1 : -1
+            )
+          );
 
+          setProccesData(data);
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
           setIsLoaded(true);
@@ -255,6 +267,17 @@ const Home = ({ match, history }) => {
         }}
         data={selectedDetail}
         onDownload={onDownloadModel}
+      />
+      <ModalProccess
+        isOpen={isOpenProccess}
+        setIsOpen={() => {
+          setIsOpenProccess(false);
+        }}
+        valDivisor={proccesData.valueDivisor}
+        valTotalDivisor={proccesData.valTotalDivisor}
+        extractValue={proccesData.extractValue}
+        minMaxVal={proccesData.minMaxVal}
+        data={proccesData.data}
       />
       <div className="mobile-menu" onClick={(event) => event.stopPropagation()}>
         <img
@@ -397,6 +420,10 @@ const Home = ({ match, history }) => {
                       pageSizes={pageSizes}
                       toggleModal={() => setModalOpen(!modalOpen)}
                       seeAll={fetchData}
+                      isProcces={items.length !== 0}
+                      seeProccess={() => {
+                        setIsOpenProccess(true);
+                      }}
                     />
                     {!isLoaded ? (
                       <div className="loading" />

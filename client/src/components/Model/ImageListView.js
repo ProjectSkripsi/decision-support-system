@@ -61,10 +61,13 @@ const ImageListView = ({
               </Colxx>
             )}
             <Colxx xxs="10" className="mb-3">
-              <CardSubtitle className="text ellipsis">
-                <div className="text-concat" id={'Tooltip-' + product._id}>
+              <CardSubtitle>
+                <p
+                  className="list-item-heading mb-1 truncate"
+                  id={'Tooltip-' + product._id}
+                >
                   {product.title}
-                </div>
+                </p>
                 <Tooltip
                   placement="top"
                   isOpen={tooltipOpen}

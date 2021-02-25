@@ -16,10 +16,8 @@ import {
 } from 'reactstrap';
 import classnames from 'classnames';
 import { NavLink } from 'react-router-dom';
-
-import { adminRoot, baseUrl } from '../../constants/defaultValues';
 import GlideComponentThumbs from '../../components/carousel/GlideComponentThumbs';
-import { Separator, Colxx } from '../../components/common/CustomBootstrap';
+import { Colxx } from '../../components/common/CustomBootstrap';
 
 const ModalDetail = ({ isOpen, setIsOpen, data, onDownload }) => {
   const [activeTab, setActiveTab] = useState('details');
