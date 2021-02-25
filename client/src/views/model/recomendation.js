@@ -10,11 +10,14 @@ import classnames from 'classnames';
 import { scroller } from 'react-scroll';
 import { saveAs } from 'file-saver';
 import Headroom from 'react-headroom';
-import { baseUrl, adminRoot } from '../../constants/defaultValues';
+import { baseUrl } from '../../constants/defaultValues';
 import axios from 'axios';
-import { getCurriculumService } from '../../redux/model/services';
-import ListPageHeading from '../../containers/pages/ListPageHeading';
-import AddNewModal from '../../containers/pages/AddNewModal';
+import {
+  getCurriculumService,
+  onDownloadService,
+} from '../../redux/model/services';
+import RecomedationList from '../../containers/pages/RecomendationList';
+import ModalDetail from './detail';
 import ListPageListing from '../../components/Model/ListPageListing';
 import useMousetrap from '../../hooks/use-mousetrap';
 
@@ -47,9 +50,9 @@ const Home = ({ match, history }) => {
   const refSectionFooter = useRef(null);
   const [data, setData] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
-  const [displayMode, setDisplayMode] = useState('imagelist');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPageSize, setSelectedPageSize] = useState(8);
+  const [displayMode, setDisplayMode] = useState('thumblist');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedPageSize, setSelectedPageSize] = useState(0);
   const [selectedOrderOption, setSelectedOrderOption] = useState({
     column: 'title',
     label: 'Product Name',
@@ -62,6 +65,8 @@ const Home = ({ match, history }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
+  const [isOpenModel, setIsOpen] = useState(false);
+  const [selectedDetail, setSelectedDetail] = useState({});
 
   useEffect(() => {
     window.addEventListener('scroll', onWindowScroll);
@@ -121,14 +126,15 @@ const Home = ({ match, history }) => {
   };
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(0);
   }, [selectedPageSize, selectedOrderOption]);
 
   useEffect(() => {
+    const isSearch = search && `?search=${search}`;
     async function fetchData() {
       axios
         .get(
-          `${baseUrl}/model/public/${selectedPageSize}/${currentPage}?search=${search}`
+          `${baseUrl}/model/recomendation/all/${selectedPageSize}/${currentPage}${isSearch}`
         )
         .then((res) => {
           return res.data;
@@ -136,6 +142,7 @@ const Home = ({ match, history }) => {
         .then((data) => {
           setTotalPage(data.totalPage);
           setItems(data.data);
+
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
           setIsLoaded(true);
@@ -217,8 +224,21 @@ const Home = ({ match, history }) => {
 
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
+
   const toDetailModel = (id) => {
-    history.push(`${adminRoot}/pages/model/details?id=${id}`);
+    const data = items.find((item) => item._id === id);
+    setSelectedDetail(data);
+    setIsOpen(true);
+  };
+
+  const fetchData = async () => {
+    setCurrentPage(1);
+    setSelectedPageSize(30);
+  };
+
+  const onDownloadModel = async (data) => {
+    saveAs(data.fileUrl, `${data.title}.pdf`);
+    const downloaded = await onDownloadService(data._id);
   };
 
   return (
@@ -227,6 +247,15 @@ const Home = ({ match, history }) => {
         'show-mobile-menu': showMobileMenu,
       })}
     >
+      <ModalDetail
+        isOpen={isOpenModel}
+        setIsOpen={() => {
+          setIsOpen(false);
+          setSelectedDetail({});
+        }}
+        data={selectedDetail}
+        onDownload={onDownloadModel}
+      />
       <div className="mobile-menu" onClick={(event) => event.stopPropagation()}>
         <img
           style={{ cursor: 'pointer' }}
@@ -329,47 +358,49 @@ const Home = ({ match, history }) => {
         <div className="content-container">
           <div className="section home" ref={refSectionHome}>
             <div className="container">
-              <div className="row home-row" ref={refRowHome}>
-                {!isLoaded ? (
-                  <div className="loading" />
-                ) : (
-                  <>
-                    <div className="disable-text-selection">
-                      <ListPageHeading
-                        heading="menu.data-list"
-                        displayMode={displayMode}
-                        changeDisplayMode={setDisplayMode}
-                        handleChangeSelectAll={handleChangeSelectAll}
-                        changeOrderBy={(column) => {
-                          setSelectedOrderOption(
-                            orderOptions.find((x) => x.column === column)
-                          );
-                        }}
-                        changePageSize={setSelectedPageSize}
-                        selectedPageSize={selectedPageSize}
-                        totalItemCount={totalItemCount}
-                        selectedOrderOption={selectedOrderOption}
-                        match={match}
-                        startIndex={startIndex}
-                        endIndex={endIndex}
-                        selectedItemsLength={
-                          selectedItems ? selectedItems.length : 0
-                        }
-                        itemsLength={items ? items.length : 0}
-                        onSearchKey={(e) => {
-                          if (e.key === 'Enter') {
-                            setSearch(e.target.value.toLowerCase());
+              <div className=" home-row" ref={refRowHome}>
+                <>
+                  <div className="disable-text-selection">
+                    <RecomedationList
+                      heading="menu.data-list"
+                      displayMode={displayMode}
+                      changeDisplayMode={setDisplayMode}
+                      handleChangeSelectAll={handleChangeSelectAll}
+                      changeOrderBy={(column) => {
+                        setSelectedOrderOption(
+                          orderOptions.find((x) => x.column === column)
+                        );
+                      }}
+                      changePageSize={setSelectedPageSize}
+                      selectedPageSize={selectedPageSize}
+                      totalItemCount={totalItemCount}
+                      selectedOrderOption={selectedOrderOption}
+                      match={match}
+                      startIndex={startIndex}
+                      endIndex={endIndex}
+                      selectedItemsLength={
+                        selectedItems ? selectedItems.length : 0
+                      }
+                      itemsLength={items ? items.length : 0}
+                      onSearchKey={(e) => {
+                        if (e.key === 'Enter') {
+                          setSearch(e.target.value.toLowerCase());
+                          setCurrentPage(1);
+                          if (e.target.value !== '') {
+                            setSelectedPageSize(10);
+                          } else {
+                            setSelectedPageSize(30);
                           }
-                        }}
-                        orderOptions={orderOptions}
-                        pageSizes={pageSizes}
-                        toggleModal={() => setModalOpen(!modalOpen)}
-                      />
-                      <AddNewModal
-                        modalOpen={modalOpen}
-                        toggleModal={() => setModalOpen(!modalOpen)}
-                        categories={categories}
-                      />
+                        }
+                      }}
+                      orderOptions={orderOptions}
+                      pageSizes={pageSizes}
+                      toggleModal={() => setModalOpen(!modalOpen)}
+                      seeAll={fetchData}
+                    />
+                    {!isLoaded ? (
+                      <div className="loading" />
+                    ) : (
                       <ListPageListing
                         items={items}
                         displayMode={displayMode}
@@ -381,10 +412,11 @@ const Home = ({ match, history }) => {
                         onContextMenu={onContextMenu}
                         onChangePage={setCurrentPage}
                         toDetailModel={toDetailModel}
+                        onDownloadModel={onDownloadModel}
                       />
-                    </div>
-                  </>
-                )}
+                    )}
+                  </div>
+                </>
               </div>
             </div>
           </div>

@@ -10,10 +10,12 @@ const {
   getAnyModel,
   updateModel,
   onDownload,
+  getRecomendations,
 } = require("../controllers/modelController");
 
 const { isLogin, isAdmin } = require("../middlewares/auth");
 
+router.get("/recomendation/all/:pageSize/:currentPage", getRecomendations);
 router.get("/public/:pageSize/:currentPage", getModelPublic);
 router.post("/delete", isLogin, isAdmin, deleteModel);
 router.post("/create", isLogin, isAdmin, createModel);

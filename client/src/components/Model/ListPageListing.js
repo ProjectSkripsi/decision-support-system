@@ -51,6 +51,8 @@ const ListPageListing = ({
               isSelect={selectedItems.includes(product._id)}
               collect={collect}
               onCheckItem={onCheckItem}
+              toDetailModel={toDetailModel}
+              onDownloadModel={onDownloadModel}
             />
           );
         }

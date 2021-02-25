@@ -223,7 +223,6 @@ const Home = ({ match, history }) => {
     const data = items.find((item) => item._id === id);
     setSelectedDetail(data);
     setIsOpen(true);
-    // history.push(`${adminRoot}/pages/model/details?id=${id}`);
   };
 
   const startIndex = (currentPage - 1) * selectedPageSize;

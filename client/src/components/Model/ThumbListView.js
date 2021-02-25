@@ -1,12 +1,19 @@
 import React from 'react';
-import { Card, CustomInput, Badge } from 'reactstrap';
+import { Card, Button, Badge } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import moment from 'moment';
 
-const ThumbListView = ({ product, isSelect, collect, onCheckItem }) => {
+const ThumbListView = ({
+  product,
+  isSelect,
+  collect,
+  onCheckItem,
+  toDetailModel,
+  onDownloadModel,
+}) => {
   return (
     <Colxx xxs="12" key={product._id} className="mb-3">
       <ContextMenuTrigger id="menu_id" data={product._id} collect={collect}>
@@ -34,23 +41,34 @@ const ThumbListView = ({ product, isSelect, collect, onCheckItem }) => {
                 {product.year}
               </p>
               <p className="mb-1 text-muted text-small w-15 w-sm-100">
-                {moment(product.createdAt).format('L')}
+                Topsis: {product.topsis.topsis}
               </p>
-              <div className="w-15 w-sm-100">
-                <Badge color={product.isPublish ? 'primary' : 'secondary'} pill>
+              <div className="w-10 w-sm-100">
+                {/* <Badge color={product.isPublish ? 'primary' : 'secondary'} pill>
                   {product.isPublish ? 'PUBLISH' : 'ON HOLD'}
-                </Badge>
+                </Badge> */}
               </div>
             </div>
-            <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-              <CustomInput
-                className="item-check mb-0"
-                type="checkbox"
-                id={`check_${product._id}`}
-                checked={isSelect}
-                onChange={() => {}}
-                label=""
-              />
+            <div className="w-10 w-sm-100">
+              <Button
+                color="secondary"
+                outline
+                size="sm"
+                className="mt-4"
+                onClick={() => toDetailModel(product._id)}
+              >
+                DETAIL
+              </Button>
+            </div>
+            <div className="w-10 w-sm-100">
+              <Button
+                color="secondary"
+                size="sm"
+                className="mt-4"
+                onClick={() => onDownloadModel(product)}
+              >
+                UNDUH
+              </Button>
             </div>
           </div>
         </Card>
@@ -59,5 +77,4 @@ const ThumbListView = ({ product, isSelect, collect, onCheckItem }) => {
   );
 };
 
-/* React.memo detail : https://reactjs.org/docs/react-api.html#reactpurecomponent  */
 export default React.memo(ThumbListView);

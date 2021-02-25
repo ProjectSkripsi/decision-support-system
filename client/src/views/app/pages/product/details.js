@@ -37,7 +37,6 @@ const DetailsPages = ({ match, intl, history, getModelByIdAction }) => {
     const id = params.get('id'); // bar
 
     getModelByIdAction(id, (callBack) => {
-      console.log('first', callBack.data);
       setData(callBack.data);
     });
   }, []);
