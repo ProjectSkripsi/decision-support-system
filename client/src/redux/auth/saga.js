@@ -41,7 +41,7 @@ function* loginWithEmailPassword({ payload }) {
   const { history } = payload;
   try {
     const loginUser = yield call(userLoginService, { email, password });
-    console.log(loginUser);
+
     if (loginUser.status === 200) {
       const item = { uid: loginUser.data._id, ...loginUser.data };
 
@@ -93,11 +93,11 @@ export function* watchLogoutUser() {
 }
 
 const logoutAsync = async (history) => {
-  await auth
-    .signOut()
-    .then((user) => user)
-    .catch((error) => error);
-  history.push('/');
+  // await auth
+  //   // .signOut()
+  //   .then((user) => user)
+  //   .catch((error) => error);
+  history.push('/login');
 };
 
 function* logout({ payload }) {
