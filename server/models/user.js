@@ -12,7 +12,6 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      default: "admin",
     },
     name: {
       type: String,
@@ -22,7 +21,15 @@ const userSchema = new Schema(
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: true,
+    },
+    ijazah: {
+      available: Boolean,
+      fileUrl: String,
+    },
+    certificate: {
+      type: Boolean,
+      fileUrl: String,
     },
     deleteAt: {
       type: Date,

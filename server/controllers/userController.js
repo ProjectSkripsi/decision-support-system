@@ -98,12 +98,13 @@ module.exports = {
   },
 
   updateProfile: async (req, res) => {
-    const { id } = req.decoded;
+    const { _id } = req.params;
+
     const { email, name, bio, avatarUrl } = req.body.data;
     try {
       const response = await User.findOneAndUpdate(
         {
-          _id: id,
+          _id,
         },
         {
           email,
