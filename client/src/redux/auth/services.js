@@ -26,11 +26,15 @@ export const resetPasswordService = async (userData) => {
 
 export const updateProfileService = async (data) => {
   try {
-    const response = await axios.put(`${baseUrl}/user/profile`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.put(
+      `${baseUrl}/user/profile/${data.data._id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response;
   } catch ({ response }) {
     return response;

@@ -42,7 +42,7 @@ import { updateProfile } from '../../../redux/actions';
 const friendsData = whotoFollowData.slice();
 const followData = whotoFollowData.slice(0, 5);
 
-const ProfileSocial = ({ match, updateProfileAction }) => {
+const ProfileSocial = ({ match, updateProfileAction, authUser }) => {
   const dropzone = useRef();
   const [activeTab, setActiveTab] = useState('profile');
   const [user, setUser] = useState({});
@@ -53,6 +53,7 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
 
   useEffect(() => {
     const token = getToken();
+
     async function fetchData() {
       axios
         .get(`${baseUrl}/user/profile`, {
@@ -181,6 +182,21 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
                 <IntlMessages id="pages.profile" />
               </NavLink>
             </NavItem>
+            {authUser.role === 'teacher' && (
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: activeTab === 'other',
+                    'nav-link': true,
+                  })}
+                  onClick={() => setActiveTab('other')}
+                  to="#"
+                  location={{}}
+                >
+                  KELENGKAPAN BERKAS
+                </NavLink>
+              </NavItem>
+            )}
             <NavItem>
               <NavLink
                 className={classnames({
@@ -207,8 +223,14 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
                 </Colxx>
                 <Colxx xxs="12" lg="5" xl="4" className="col-left">
                   <SingleLightbox
-                    thumb={user.avatarUrl}
-                    large={user.avatarUrl}
+                    thumb={
+                      user.avatarUrl ||
+                      'http://dipanegara.ac.id/unduh/logo-undipa.png'
+                    }
+                    large={
+                      user.avatarUrl ||
+                      'http://dipanegara.ac.id/unduh/logo-undipa.png'
+                    }
                     className="img-thumbnail card-img social-profile-img"
                   />
 
@@ -253,8 +275,14 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
                         <div className="row">
                           <div className="col-3">
                             <SingleLightbox
-                              thumb={user.avatarUrl}
-                              large={user.avatarUrl}
+                              thumb={
+                                user.avatarUrl ||
+                                'http://dipanegara.ac.id/unduh/logo-undipa.png'
+                              }
+                              large={
+                                user.avatarUrl ||
+                                'http://dipanegara.ac.id/unduh/logo-undipa.png'
+                              }
                               className="img-thumbnail card-img"
                             />
                           </div>
@@ -357,6 +385,9 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
                 </CardBody>
               </Card>
             </TabPane>
+            <TabPane tabId="other">
+              <Card className="mb-5">other</Card>
+            </TabPane>
           </TabContent>
         </Colxx>
       </Row>
@@ -365,7 +396,7 @@ const ProfileSocial = ({ match, updateProfileAction }) => {
 };
 
 const mapStateToProps = ({ authUser }) => ({
-  // user: authUser.currentUser,
+  authUser: authUser.currentUser,
 });
 export default connect(mapStateToProps, {
   updateProfileAction: updateProfile,

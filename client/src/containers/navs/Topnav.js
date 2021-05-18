@@ -249,7 +249,10 @@ const TopNav = ({
               <span>
                 <img
                   alt="Profile"
-                  src={currentUser.avatarUrl || '/assets/img/profiles/l-9.jpg'}
+                  src={
+                    currentUser.avatarUrl ||
+                    'http://dipanegara.ac.id/unduh/logo-undipa.png'
+                  }
                 />
               </span>
             </DropdownToggle>

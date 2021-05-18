@@ -27,7 +27,7 @@ const DefaultDashboard = ({ intl, match }) => {
 
   return (
     <>
-      Hello admin!
+      Hello UNDIPA 2021!
       {/* <Row>
         <Colxx xxs="12">
           <Breadcrumb heading="menu.default" match={match} />

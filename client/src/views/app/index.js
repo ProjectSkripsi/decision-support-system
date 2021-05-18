@@ -26,6 +26,9 @@ const MasterUser = React.lazy(() =>
 const MasterPaud = React.lazy(() =>
   import(/* webpackChunkName: "applications" */ './paud')
 );
+const MasterTeacher = React.lazy(() =>
+  import(/* webpackChunkName: "applications" */ './teacher/index')
+);
 
 const App = ({ match }) => {
   return (
@@ -66,6 +69,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/blank-page`}
               render={(props) => <BlankPage {...props} />}
+            />
+            <Route
+              path={`${match.url}/teacher`}
+              render={(props) => <MasterTeacher {...props} />}
             />
             <Route
               path={`${match.url}/account-setting`}

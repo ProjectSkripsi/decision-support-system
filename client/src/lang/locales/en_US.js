@@ -152,6 +152,8 @@ module.exports = {
   'menu.master-user': 'Pengaturan Akun',
   'menu.model': 'Model',
   'menu.account-setting': 'Pengaturan Akun',
+  'menu.teacher': 'Tenaga Pengajar',
+  'menu.master-symptoms': 'Master Tenaga Pengajar',
 
   /* 04.Dashboards */
   'dashboards.pending-orders': 'Pending Orders',
