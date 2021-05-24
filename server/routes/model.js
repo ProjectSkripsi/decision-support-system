@@ -19,7 +19,7 @@ router.get("/recomendation/all/:pageSize/:currentPage", getRecomendations);
 router.get("/public/:pageSize/:currentPage", getModelPublic);
 router.post("/delete", isLogin, isAdmin, deleteModel);
 router.post("/create", isLogin, isAdmin, createModel);
-router.get("/:pageSize/:currentPage", isLogin, isAdmin, getModel);
+router.get("/:pageSize/:currentPage", isLogin, getModel);
 router.patch("/publish/:id/:type", isLogin, isAdmin, publishModel);
 router.put("/update/:id", isLogin, isAdmin, updateModel);
 router.get("/any-model", getAnyModel);
