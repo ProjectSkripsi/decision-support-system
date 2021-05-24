@@ -14,7 +14,7 @@ const data = [
     icon: 'iconsminds-digital-drawing',
     label: 'menu.pages',
     to: `${adminRoot}/pages/model/data-list`,
-    roles: ['admin'],
+    roles: ['admin', 'teacher'],
   },
   {
     id: 'teacher',

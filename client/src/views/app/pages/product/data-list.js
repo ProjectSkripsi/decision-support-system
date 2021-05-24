@@ -38,6 +38,7 @@ const DataListPages = ({
   publishModelAction,
   updateModelAction,
   history,
+  role,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('imagelist');
@@ -217,12 +218,13 @@ const DataListPages = ({
   };
 
   const fetchNew = async () => {
+    const token = getToken();
     axios
       .get(
         `${baseUrl}/model/${selectedPageSize}/${currentPage}?search=${search}`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMGUwMmJiOGE0ZTI4ZDM5NGY4MzhjMyIsImVtYWlsIjoiYWRtaW5AZ29kLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxMTUzNDQzMH0.PiUcMSGxCF-oqp31zlew8nytZ-CV6Y1mImxzZ_cebg8`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -321,6 +323,7 @@ const DataListPages = ({
             setIsRemoveFile(false);
           }}
           isAdmin
+          isTeacher={role === 'teacher'}
           onDelete={onDelete}
         />
         <AddNewModal
@@ -373,7 +376,11 @@ const DataListPages = ({
   );
 };
 
-export default connect(null, {
+const mapStateToProps = ({ authUser }) => ({
+  role: authUser.currentUser.role,
+});
+
+export default connect(mapStateToProps, {
   submitModelAction: sumbitModel,
   deleteModelAction: deleteModel,
   publishModelAction: publishModel,

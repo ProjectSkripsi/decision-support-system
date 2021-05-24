@@ -39,6 +39,7 @@ const ListPageHeading = ({
   isOrder,
   isAdmin,
   onDelete,
+  isTeacher,
 }) => {
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
@@ -52,7 +53,7 @@ const ListPageHeading = ({
             {/* <IntlMessages id={heading} /> */}
             Model Pembelajaran
           </h1>
-          {isAdmin && (
+          {isAdmin && !isTeacher && (
             <div className="text-zero top-right-button-container">
               <Button
                 color="primary"
