@@ -38,6 +38,7 @@ import { NotificationManager } from '../../../components/common/react-notificati
 import { getToken } from '../../../helpers/Utils';
 import { baseUrl } from '../../../constants/defaultValues';
 import { updateProfile } from '../../../redux/actions';
+import Files from './files';
 
 const friendsData = whotoFollowData.slice();
 const followData = whotoFollowData.slice(0, 5);
@@ -50,10 +51,11 @@ const ProfileSocial = ({ match, updateProfileAction, authUser }) => {
   const [newPassword, setNewPassword] = useState('');
   const [retypePassword, setRetypePassword] = useState('');
   const [notMacth, setNotMatch] = useState(false);
+  const [files, setFiles] = useState([]);
+  // const [oldFiles, setOldFiles] = useState([]);
 
   useEffect(() => {
     const token = getToken();
-
     async function fetchData() {
       axios
         .get(`${baseUrl}/user/profile`, {
@@ -65,6 +67,7 @@ const ProfileSocial = ({ match, updateProfileAction, authUser }) => {
           return res.data;
         })
         .then((data) => {
+          setFiles(data.files);
           setUser(data);
         });
     }
@@ -161,12 +164,74 @@ const ProfileSocial = ({ match, updateProfileAction, authUser }) => {
     }
   };
 
+  const toggleAdd = () => {
+    setFiles(files.concat([{ name: '', fileUrl: '' }]));
+  };
+
+  const onRemove = (idx) => {
+    setFiles(files.filter((s, sidx) => idx !== sidx));
+  };
+
+  const onUploadFile = (file, idx) => {
+    const filex = JSON.parse(file.xhr.response);
+    const newFile = files.map((fil, sidx) => {
+      if (idx !== sidx) return fil;
+      return { ...fil, fileUrl: filex.fileUrl };
+    });
+    setFiles(newFile);
+  };
+
+  const handleChange = (e, idx) => {
+    const { name, value } = e.target;
+    const file = name === 'name' ? value : null;
+    const newFile = files.map((fil, sidx) => {
+      if (idx !== sidx) return fil;
+      return { ...fil, name: file };
+    });
+    setFiles(newFile);
+  };
+
+  const onSaveFile = () => {
+    const token = getToken();
+    const validation = files.every((item) => item.name && item.fileUrl);
+    if (validation) {
+      axios
+        .patch(
+          `${baseUrl}/user/${user._id}`,
+          { files },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          createNotification('success', 'Berhasil perbarui data');
+        })
+        .catch((error) => {
+          createNotification('error');
+        });
+    } else {
+      createNotification('error');
+    }
+  };
+
   return (
     <>
       <Row>
         <Colxx xxs="12">
           <h1>{user.name}</h1>
           <Breadcrumb match={match} />
+          <div className="text-zero top-right-button-container">
+            <Button
+              color="primary"
+              size="lg"
+              className="top-right-button"
+              onClick={() => toggleAdd()}
+            >
+              Tambah File
+            </Button>
+          </div>
 
           <Nav tabs className="separator-tabs ml-0 mb-5">
             <NavItem>
@@ -386,7 +451,14 @@ const ProfileSocial = ({ match, updateProfileAction, authUser }) => {
               </Card>
             </TabPane>
             <TabPane tabId="other">
-              <Card className="mb-5">other</Card>
+              <Files
+                files={files}
+                onRemove={onRemove}
+                handleChange={handleChange}
+                onUploadFile={onUploadFile}
+                onSaveFile={onSaveFile}
+                oldFiles={files}
+              />
             </TabPane>
           </TabContent>
         </Colxx>

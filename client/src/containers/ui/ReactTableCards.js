@@ -4,7 +4,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/display-name */
 import React from 'react';
-import { Card, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardTitle, Button } from 'reactstrap';
 import { useTable, usePagination, useSortBy } from 'react-table';
 import classnames from 'classnames';
 
@@ -13,7 +13,7 @@ import DatatablePagination from '../../components/DatatablePagination';
 
 import products from '../../data/products';
 
-function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
+function Table({ columns, data, divided = false, defaultPageSize = 10 }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -86,7 +86,7 @@ function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
         </tbody>
       </table>
 
-      <DatatablePagination
+      {/* <DatatablePagination
         page={pageIndex}
         pages={pageCount}
         canPrevious={canPreviousPage}
@@ -98,7 +98,7 @@ function Table({ columns, data, divided = false, defaultPageSize = 6 }) {
         onPageChange={(p) => gotoPage(p)}
         onPageSizeChange={(s) => setPageSize(s)}
         paginationMaxSize={pageCount}
-      />
+      /> */}
     </>
   );
 }
@@ -146,42 +146,41 @@ export const ReactTableWithPaginationCard = () => {
   );
 };
 
-export const ReactTableDivided = () => {
+export const ReactTableDivided = ({ data }) => {
   const cols = React.useMemo(
     () => [
       {
         Header: 'Name',
-        accessor: 'title',
+        accessor: 'name',
         cellClass: 'list-item-heading w-40',
         Cell: (props) => <>{props.value}</>,
       },
       {
-        Header: 'Sales',
-        accessor: 'sales',
-        cellClass: 'text-muted  w-10',
+        Header: 'File',
+        accessor: 'fileUrl',
+        cellClass: 'text w-90',
         Cell: (props) => <>{props.value}</>,
       },
       {
-        Header: 'Stock',
-        accessor: 'stock',
-        cellClass: 'text-muted  w-10',
-        Cell: (props) => <>{props.value}</>,
-      },
-      {
-        Header: 'Category',
-        accessor: 'category',
-        cellClass: 'text-muted  w-40',
-        Cell: (props) => <>{props.value}</>,
+        Header: 'Action',
+        accessor: '_id',
+        cellClass: 'text-muted w-10',
+        Cell: (props) => (
+          <>
+            <i
+              className="simple-icon-magnifier"
+              style={{ cursor: 'pointer' }}
+              onClick={() => window.open(props.row.original.fileUrl, '_blank')}
+            />
+          </>
+        ),
       },
     ],
     []
   );
   return (
     <div className="mb-4">
-      <CardTitle>
-        <IntlMessages id="table.divided" />
-      </CardTitle>
-      <Table columns={cols} data={products} divided />
+      <Table columns={cols} data={data} divided />
     </div>
   );
 };
