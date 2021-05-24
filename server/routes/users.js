@@ -6,6 +6,7 @@ const {
   getUserById,
   updateProfile,
   changePassword,
+  updateFiles,
 } = require("../controllers/userController");
 const { isLogin } = require("../middlewares/auth");
 
@@ -19,5 +20,6 @@ router.put("/profile/:_id", isLogin, updateProfile);
 router.patch("/change-password", isLogin, changePassword);
 router.post("/register", register);
 router.post("/login", login);
+router.patch("/:_id", isLogin, updateFiles);
 
 module.exports = router;

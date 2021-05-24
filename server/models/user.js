@@ -23,14 +23,12 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    ijazah: {
-      available: Boolean,
-      fileUrl: String,
-    },
-    certificate: {
-      type: Boolean,
-      fileUrl: String,
-    },
+    files: [
+      {
+        name: String,
+        fileUrl: String,
+      },
+    ],
     deleteAt: {
       type: Date,
       default: null,

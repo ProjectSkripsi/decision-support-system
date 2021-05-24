@@ -185,4 +185,23 @@ module.exports = {
         });
       });
   },
+
+  updateFiles: async (req, res) => {
+    const { _id } = req.params;
+    const { files } = req.body;
+
+    try {
+      const response = await User.findByIdAndUpdate(
+        {
+          _id,
+        },
+        {
+          files,
+        }
+      );
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };
